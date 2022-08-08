@@ -3,8 +3,9 @@
     "homepage": ".",
     "version": "0.1.0",
     "private": true,
-    "proxy": "http://localhost:5000",
+    "proxy": "http://127.0.0.1:5000",
     "dependencies": {
+        "@chakra-ui/icons": "^2.0.6",
         "@chakra-ui/react": "^2.2.6",
         "@emotion/react": "^11.10.0",
         "@emotion/styled": "^11.10.0",
