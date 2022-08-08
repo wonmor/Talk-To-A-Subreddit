@@ -1,19 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+
 import { BrowserRouter } from "react-router-dom";
+import { ChakraProvider } from '@chakra-ui/react'
 
 import './index.css';
 
 import App from './App';
 
-import store from './store'
-import { Provider } from 'react-redux'
-
 /*
-█▀▀ █░░ █▀▀ █▀▀ ▀█▀ █▀█ █▀█ █▄░█ █░█ █ █▀ █░█ ▄▀█ █░░ █ ▀█ █▀▀ █▀▄ ▀   █▀▀ █▀█ █▀█ █▄░█ ▀█▀ ▄▄ █▀▀ █▄░█ █▀▄
-██▄ █▄▄ ██▄ █▄▄ ░█░ █▀▄ █▄█ █░▀█ ▀▄▀ █ ▄█ █▄█ █▀█ █▄▄ █ █▄ ██▄ █▄▀ ▄   █▀░ █▀▄ █▄█ █░▀█ ░█░ ░░ ██▄ █░▀█ █▄▀
+▒█░▒█ █▀▀ █░░█ ▒█▀▀█ █░░█ █▀▀▄ █▀▀▄ █░░█ ▄ 　 ▒█▀▀▀ █▀▀█ █▀▀█ █▀▀▄ ▀▀█▀▀ ░░ ▒█▀▀▀ █▀▀▄ █▀▀▄ 
+▒█▀▀█ █▀▀ █▄▄█ ▒█▀▀▄ █░░█ █░░█ █░░█ █▄▄█ ░ 　 ▒█▀▀▀ █▄▄▀ █░░█ █░░█ ░░█░░ ▀▀ ▒█▀▀▀ █░░█ █░░█ 
+▒█░▒█ ▀▀▀ ▄▄▄█ ▒█▄▄█ ░▀▀▀ ▀▀▀░ ▀▀▀░ ▄▄▄█ ▀ 　 ▒█░░░ ▀░▀▀ ▀▀▀▀ ▀░░▀ ░░▀░░ ░░ ▒█▄▄▄ ▀░░▀ ▀▀▀░
 
-DEVELOPED AND DESIGNED BY JOHN SEONG. DEVELOPED WITH CREATE-REACT-APP.
+DEVELOPED AND DESIGNED BY JOHN SEONG. DEVELOPED USING CREATE-REACT-APP.
 */
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -22,9 +22,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Provider store={store}>
+      <ChakraProvider>
         <App />
-      </Provider>
+      </ChakraProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
