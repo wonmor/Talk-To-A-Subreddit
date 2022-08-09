@@ -4,9 +4,6 @@ import { Routes, Route } from "react-router-dom";
 
 import './App.css';
 
-import Header from './components/bars/Header';
-import Footer from './components/bars/Footer';
-
 import NotFound from './components/NotFound';
 import Base from './components/Base';
 
@@ -37,14 +34,10 @@ export default function App() {
 
   return (
     <div>
-      <Header />
-      <div>
-        <Routes>
-          <Route path="*" element={<NotFound />} />
-          <Route exact path="/" element={<Base />} />
-        </Routes>
-      </div>
-      <Footer />
+      <Routes>
+        <Route path="*" element={<NotFound />} />
+        <Route exact path="/" element={<Base />} />
+      </Routes>
     </div>
   );
 }
