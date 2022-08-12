@@ -2,7 +2,7 @@
 FROM node:16-alpine as build-step
 WORKDIR /app
 ENV PATH /app/client/node_modules/.bin:$PATH
-# COPY yarn.lock ./
+# COPY yarn.lock ./ --> as there's no YARN dependency in the root folder
 COPY client ./client
 WORKDIR /app/client
 RUN yarn install
