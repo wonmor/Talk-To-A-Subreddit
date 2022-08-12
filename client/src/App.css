@@ -1,4 +1,4 @@
-@import "./assets/Quicksand-VariableFont_wght.ttf";
+@import "https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap";
 
 body {
   overflow-x: clip;

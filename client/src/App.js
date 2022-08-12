@@ -7,6 +7,9 @@ import './App.css';
 import NotFound from './components/NotFound';
 import Base from './components/Base';
 
+import Home from './components/pages/Home';
+import Chat from './components/pages/Chat';
+
 /*
 ██████╗░░█████╗░██╗░░░██╗████████╗███████╗██████╗░░██████╗
 ██╔══██╗██╔══██╗██║░░░██║╚══██╔══╝██╔════╝██╔══██╗██╔════╝
@@ -35,8 +38,9 @@ export default function App() {
   return (
     <div>
       <Routes>
-        <Route path="*" element={<NotFound />} />
-        <Route exact path="/" element={<Base />} />
+        <Route path="*" element={<Base component={NotFound} />} />
+        <Route exact path="/" element={<Base component={Home} />} />
+        <Route path="/chat" element={<Base component={Chat} />} />
       </Routes>
     </div>
   );

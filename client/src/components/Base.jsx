@@ -34,7 +34,7 @@ const NavLink = ({ children }) => (
   </Link>
 );
 
-export default function Base() {
+export default function Base(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -43,6 +43,7 @@ export default function Base() {
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
+            colorScheme={'transparent'}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={'Open Menu'}
             display={{ md: 'none' }}
@@ -62,7 +63,7 @@ export default function Base() {
           <Flex alignItems={'center'}>
             <Button
               variant={'solid'}
-              colorScheme={'teal'}
+              colorScheme={'cyan'}
               size={'sm'}
               mr={4}
               leftIcon={<AddIcon />}>
@@ -103,7 +104,11 @@ export default function Base() {
         ) : null}
       </Box>
 
-      <Box p={4}>Main Content Here</Box>
+      <Box p={4}>
+        <Image src="heybuddy_logo.svg" marginBottom="10px" display={{ md: 'none' }} />
+        <span>Main Content Here</span>
+        <props.component />
+      </Box>
     </Box>
   );
 }
