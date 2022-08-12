@@ -118,7 +118,7 @@ export default function Base(props) {
       <Box p={4}>
         <Image className="logo-button" src="heybuddy_logo.svg" onClick={() => {navigate('/')}} marginBottom="10px" display={{ md: 'none' }} />
         {/* Main Content goes here... */}
-        <props.component />
+        <props.content />
       </Box>
     </Box>
   );

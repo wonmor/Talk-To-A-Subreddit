@@ -38,9 +38,9 @@ export default function App() {
   return (
     <div>
       <Routes>
-        <Route path="*" element={<Base component={NotFound} />} />
-        <Route exact path="/" element={<Base component={Home} />} />
-        <Route path="/chat" element={<Base component={Chat} />} />
+        <Route path="*" element={<Base content={NotFound} />} />
+        <Route exact path="/" element={<Base content={Home} />} />
+        <Route path="/chat" element={<Base content={Chat} />} />
       </Routes>
     </div>
   );
