@@ -1,3 +1,7 @@
+import './Base.css';
+
+import { useNavigate } from "react-router-dom";
+
 import {
   Box,
   Flex,
@@ -16,26 +20,33 @@ import {
   useColorModeValue,
   Stack,
 } from '@chakra-ui/react';
+
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 
 const Links = ['Chat', 'API', 'About'];
 
-const NavLink = ({ children }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={'md'}
-    _hover={{
-      textDecoration: 'none',
-      bg: useColorModeValue('gray.700', 'gray.700'),
-    }}
-    href={'#'}>
-    {children}
-  </Link>
-);
+const NavLink = ({ children }) => {
+  const navigate = useNavigate();
+
+  return (
+    <Link
+      px={2}
+      py={1}
+      rounded={'md'}
+      _hover={{
+        textDecoration: 'none',
+        bg: useColorModeValue('gray.700', 'gray.700'),
+      }}
+      onClick={() => {navigate(`/${children}`)}}>
+      {children}
+    </Link>
+  );
+}
 
 export default function Base(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const navigate = useNavigate();
 
   return (
     <Box textColor={'white'}>
@@ -50,7 +61,7 @@ export default function Base(props) {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Image src="heybuddy_logo.svg" />
+            <Image className="logo-button" src="heybuddy_logo.svg" onClick={() => {navigate('/')}} />
             <HStack
               as={'nav'}
               spacing={4}
@@ -105,8 +116,8 @@ export default function Base(props) {
       </Box>
 
       <Box p={4}>
-        <Image src="heybuddy_logo.svg" marginBottom="10px" display={{ md: 'none' }} />
-        <span>Main Content Here</span>
+        <Image className="logo-button" src="heybuddy_logo.svg" onClick={() => {navigate('/')}} marginBottom="10px" display={{ md: 'none' }} />
+        {/* Main Content goes here... */}
         <props.component />
       </Box>
     </Box>

@@ -4,9 +4,9 @@ import { Routes, Route } from "react-router-dom";
 
 import './App.css';
 
-import NotFound from './components/NotFound';
 import Base from './components/Base';
 
+import NotFound from './components/pages/NotFound';
 import Home from './components/pages/Home';
 import Chat from './components/pages/Chat';
 
