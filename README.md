@@ -9,6 +9,6 @@
 - Flask
 - React
 - React Three Fiber
-- Chaktra UI
+- Chakra UI
 - Axios
 - Docker
