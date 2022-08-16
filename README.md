@@ -7,6 +7,8 @@
 
 ## Dependencies
 - Flask
+- TensorFlow
+- SciKit
 - React
 - React Three Fiber
 - Chakra UI
