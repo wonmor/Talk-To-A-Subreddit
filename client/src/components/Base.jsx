@@ -72,7 +72,7 @@ export default function Base(props) {
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
-            <Button
+            {/* <Button
               variant={'solid'}
               colorScheme={'cyan'}
               size={'sm'}
@@ -100,7 +100,7 @@ export default function Base(props) {
                 <MenuDivider />
                 <MenuItem>Link 3</MenuItem>
               </MenuList>
-            </Menu>
+            </Menu> */}
           </Flex>
         </Flex>
 
