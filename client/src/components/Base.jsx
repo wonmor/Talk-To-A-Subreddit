@@ -27,11 +27,13 @@ const Links = ['Chat', 'API', 'About'];
 
 function NavLink({ children }) {
   const navigate = useNavigate();
+  const pathname = window.location.pathname;
 
   return (
     <Link
       px={2}
       py={1}
+      bg={pathname.replace("/", "") === children ? 'gray.700' : 'transparent'}
       rounded={'md'}
       _hover={{
         textDecoration: 'none',
