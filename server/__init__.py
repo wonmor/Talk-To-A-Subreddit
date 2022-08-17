@@ -59,4 +59,6 @@ TIPS & TRICKS
 3. HOW TO SET UP SECRET_KEY ON HEROKU: https://stackoverflow.com/questions/47949022/git-heroku-how-to-hide-my-secret-key
 4. COMMAND (RUN ON TERMINAL): heroku config:set SECRET_KEY='<ENTER SECRET KEY>' -a lottery-simulator-2022
 4. HEROKU-FLASK-REACT SETUP TUTORIAL: https://towardsdatascience.com/reactjs-python-flask-on-heroku-2a308272886a
+
+ACTIVATE THE VIRTUALENV ON WINDOWS POWERSHELL COMMAND: venv\Scripts\Activate.ps1
 '''
