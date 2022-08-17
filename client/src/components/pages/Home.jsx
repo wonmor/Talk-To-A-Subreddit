@@ -7,13 +7,13 @@ export default function Home() {
             I am so <b>proud</b> of you for making all the way here.
         </Text>
 
-        <Text className="mb-5 text-5xl">
+        <Text className="mb-5 text-5xl mt-5 md:mt-0">
             If you don't mind me asking, <b>what should I call you?</b>
         </Text>
 
-        <Text className="mb-5 text-2xl">
+        <Text className="mb-5 text-2xl mt-5 md:mt-0">
             This is a safe space where you can share anything that you would like to.<br></br>
-            I am powered by <b>machine learning</b>, so I sort of think like a human, although the technology itself isn't perfect.
+            <div className="mt-10 md:mt-0">I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.</div>
         </Text>
 
         <Input placeholder='Enter your response...' width={"50%"} className="generic-text mb-5" />
@@ -22,7 +22,7 @@ export default function Home() {
             View our Zero-tolerant <span className="text-blue-200 font-bold">Privacy Policy</span>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
         </Text>
 
-        <Text className="mb-5 text-xl">
+        <Text className="mb-5 text-xl mt-10 md:mt-0">
             We advise you to enter a <b>fake name</b> just for our bot to recognize you the next time you talk to them.
         </Text>
         </Box>
