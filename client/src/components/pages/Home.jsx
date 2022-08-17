@@ -19,7 +19,7 @@ export default function Home() {
         <Input placeholder='Enter your response...' width={"50%"} className="generic-text mb-5" />
 
         <Text className="text-xl">
-            View our Zero-tolerant <span className="text-blue-200 font-bold underline">Privacy Policy</span>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
+            View our Zero-tolerant <span className="text-blue-200 font-bold hover:underline">Privacy Policy</span>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
         </Text>
 
         <Text className="mb-5 text-xl mt-10 md:mt-0">
