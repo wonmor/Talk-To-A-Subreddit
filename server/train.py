@@ -24,7 +24,7 @@ class Train(object):
         nltk.download("punkt")
 
     def retrieve(self):
-        #Loading intents.json
+        # Loading intents.json
         with open('server/datasets/intents.json') as intents:
             self.data = json.load(intents)
 
