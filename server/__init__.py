@@ -35,8 +35,6 @@ def create_app():
 
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
-    app.config.from_pyfile('config.cfg')
-
     app.register_blueprint(api.bp)
     
     global socketio
