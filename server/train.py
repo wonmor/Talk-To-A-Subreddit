@@ -8,15 +8,17 @@ import pickle
 import random
 
 class Train(object):
-    def __init__(self):
+    @staticmethod
+    def download_nltk():
         nltk.download("punkt")
 
     def retrieve(self):
         #Loading intents.json
-        with open('intents.json') as intents:
+        with open('server/intents.json') as intents:
             self.data = json.load(intents)
 
-        self.stemmer = LancasterStemmer()
+        global stemmer
+        stemmer = LancasterStemmer()
 
         # getting informations from intents.json--
         self.words = []
@@ -36,6 +38,72 @@ class Train(object):
 
     def preprocess(self):
         # Stemming the words and removing duplicate elements.
-        words = [self.stemmer.stem(w.lower()) for w in words if w not in "?"]
-        words = sorted(list(set(words)))
-        labels = sorted(labels)
+        self.words = [stemmer.stem(w.lower()) for w in self.words if w not in "?"]
+        self.words = sorted(list(set(self.words)))
+        self.labels = sorted(self.labels)
+
+    def hot_encode(self):
+        self.training = []
+        self.output = []
+        self.out_empty = [0 for _ in range(len(self.labels))]
+
+        # One hot encoding, Converting the words to numerals
+        for x, doc in enumerate(self.x_docs):
+            bag = []
+            wrds = [stemmer.stem(w) for w in doc]
+            for w in self.words:
+                if w in wrds:
+                    bag.append(1)
+                else:
+                    bag.append(0)
+
+            output_row = self.out_empty[:]
+            output_row[self.labels.index(self.y_docs[x])] = 1
+
+            self.training.append(bag)
+            self.output.append(output_row)
+
+
+        self.training = np.array(self.training)
+        self.output = np.array(self.output)
+
+    def create_model(self):
+        net = tflearn.input_data(shape=[None, len(self.training[0])])
+        net = tflearn.fully_connected(net, 10)
+        net = tflearn.fully_connected(net, 10)
+        net = tflearn.fully_connected(net, 10)
+        net = tflearn.fully_connected(net, len(self.output[0]), activation='softmax')
+        net = tflearn.regression(net)
+
+        self.model = tflearn.DNN(net)
+        self.model.fit(self.training, self.output, n_epoch=500, batch_size=8, show_metric=True)
+        self.model.save('model.tflearn')
+
+    @staticmethod
+    def bag_of_words(s, words):
+        bag = [0 for _ in range(len(words))]
+        s_words = nltk.word_tokenize(s)
+        
+        try:
+            s_words = [stemmer.stem(word.lower()) for word in s_words]
+        except:
+            print("Need to retrieve the data first!")
+
+        for s_word in s_words:
+            for i, w in enumerate(words):
+                if w == s_word:
+                    bag[i] = 1
+
+        return np.array(bag)
+
+    def start_training(self):
+        self.retrieve()
+        self.preprocess()
+        self.hot_encode()
+        self.create_model()
+
+# Entry point...
+Train.download_nltk()
+train = Train()
+train.start_training()
+
