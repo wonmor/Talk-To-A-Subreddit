@@ -47,7 +47,7 @@ class Reddit(object):
             
             # URL of each post
             self.posts_dict["Post URL"].append(post.url)
-        
+
         # Saving the data in a pandas dataframe
         self.top_posts = pd.DataFrame(self.posts_dict)
         self.top_posts.to_csv("server/datasets/reddit_posts.csv", index=True)
@@ -63,7 +63,15 @@ class Reddit(object):
                 continue
         
             self.post_comments.append(comment.body)
-        
+
         # creating a dataframe
         self.comments_df = pd.DataFrame(self.post_comments, columns=['comment'])
         self.comments_df.to_csv("server/datasets/reddit_comments.csv", index=True)
+
+
+# Entry point...
+reddit = Reddit()
+# Don't erase the line below...
+reddit.set_time_frame()
+reddit.retrieve_posts()
+reddit.retrieve_comments()
