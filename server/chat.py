@@ -1,5 +1,13 @@
 from train import Train
 
+'''
+HeyBuddy: An AI Chatbot that heals you
+POWERED BY SEQ2SEQ MACHINE LEARNING
+
+Developed and Designed by John Seong.
+Served under the MIT License.
+'''
+
 def chat():
     while True:
         inp = input("\n\nYou: ")

@@ -7,6 +7,17 @@ import json
 import pickle
 import random
 
+'''
+HeyBuddy: An AI Chatbot that heals you
+TRAINING FOR SEQ2SEQ MACHINE LEARNING
+
+Developed and Designed by John Seong.
+Served under the MIT License.
+
+Used the tutorial: 
+https://www.pycodemates.com/2021/11/build-a-AI-chatbot-using-python-and-deep-learning.html
+'''
+
 class Train(object):
     @staticmethod
     def download_nltk():
