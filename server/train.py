@@ -14,8 +14,14 @@ TRAINING MODULE FOR SEQ2SEQ MACHINE LEARNING
 Developed and Designed by John Seong.
 Served under the MIT License.
 
-Used the tutorial: 
+Used the tutorial for ML: 
 https://www.pycodemates.com/2021/11/build-a-AI-chatbot-using-python-and-deep-learning.html
+
+Keyword extraction tutorial:
+https://towardsdatascience.com/keyword-extraction-a-benchmark-of-7-algorithms-in-python-8a905326d93f
+
+Continual learning implementation tutorial (make it retrieve reddit database automatically at the end of every month):
+https://towardsdatascience.com/how-to-apply-continual-learning-to-your-machine-learning-models-4754adcd7f7f
 
 ACTIVATE VIRTUAL ENV. ON WINDOWS: venv\Scripts\Activate.ps1 
 '''
