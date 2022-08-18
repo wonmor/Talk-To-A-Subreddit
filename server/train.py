@@ -1,11 +1,14 @@
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
+import pandas as pd
 import numpy as np
 import tflearn
 import tensorflow as tf
 import json
 import pickle
 import random
+
+from reddit import Reddit
 
 '''
 HeyBuddy: An AI Chatbot that heals you
@@ -36,6 +39,9 @@ class Train(object):
         with open('server/datasets/intents.json') as intents:
             self.data = json.load(intents)
 
+        # Read the pre-generated reddit post CSV file...
+        self.reddit_posts = pd.read_csv('server/datasets/reddit_posts.csv').to_dict()
+
         global stemmer
         stemmer = LancasterStemmer()
 
@@ -55,6 +61,16 @@ class Train(object):
 
                 if intent['tag'] not in self.labels:
                     self.labels.append(intent['tag'])
+
+        # getting data from the parsed reddit posts...
+        for index, title in enumerate(self.reddit_posts['Title'].values()):
+            wrds = nltk.word_tokenize(title)
+            self.words.extend(wrds)
+            self.x_docs.append(wrds)
+            self.y_docs.append(self.reddit_posts['Tag'][index])
+
+            if self.reddit_posts['Tag'][index] not in self.labels:
+                self.labels.append(self.reddit_posts['Tag'][index])
 
     def preprocess(self):
         # Stemming the words and removing duplicate elements.
@@ -145,19 +161,41 @@ class Train(object):
             if inp.lower() == 'quit':
                 break
 
-        #Porbability of correct response 
+            # Probability of correct response 
             results = self.model.predict([self.bag_of_words(inp, self.words)])
 
-        # Picking the greatest number from probability
+            # Picking the greatest number from probability
             results_index = np.argmax(results)
 
             tag = self.labels[results_index]
 
-            for tg in self.data['intents']:
+            self.use_reddit_comments = False
 
+            for tg in self.data['intents']:
                 if tg['tag'] == tag:
                     responses = tg['responses']
                     print("Bot: " + random.choice(responses))
+                    self.use_reddit_comments = False
+                    break
+                else:
+                    self.use_reddit_comments = True
+            
+            if self.use_reddit_comments:
+                urls = []
+                comment_list = []
+
+                for key, value in enumerate(self.reddit_posts['Tag'].values()):
+                    if value == tag:
+                        urls.append(self.reddit_posts['Post URL'][key])
+
+                if urls:
+                    for url in urls:
+                        comment_list += Reddit.retrieve_comments(post_url=url)
+
+                print("Bot: " + random.choice(comment_list))
+
+                self.use_reddit_comments = False
+            
 
 # Entry point...
 Train.download_nltk()

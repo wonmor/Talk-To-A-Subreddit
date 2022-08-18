@@ -41,10 +41,10 @@ class Reddit(object):
         keywords_list = list(dict(keywords).keys())
         return keywords_list
 
-    def set_time_frame(self, subreddit_name="aspergers"):
+    def set_time_frame(self, subreddit_name="aspergers", post_count=100):
         subreddit = reddit_read_only.subreddit(subreddit_name)
 
-        self.posts = subreddit.top("month")
+        self.posts = subreddit.hot(limit=post_count)
         # Scraping the top posts of the current month
 
         self.posts_dict = {"Title": [], "Tag": [], "Post Text": [],
@@ -78,23 +78,20 @@ class Reddit(object):
         self.top_posts = pd.DataFrame(self.posts_dict)
         self.top_posts.to_csv("server/datasets/reddit_posts.csv", index=True)
 
-    def retrieve_comments(self, post_url="https://www.reddit.com/r/aspergers/comments/w5mhei/wooo_im_getting_my_first_ever_promotion/"):
+    @staticmethod
+    def retrieve_comments(post_url="https://www.reddit.com/r/aspergers/comments/w5mhei/wooo_im_getting_my_first_ever_promotion/"):
         # Creating a submission object
         submission = reddit_read_only.submission(url=post_url)
 
-        self.post_comments = []
+        post_comments = []
 
         for comment in submission.comments:
             if type(comment) == MoreComments:
                 continue
 
-            self.post_comments.append(comment.body)
+            post_comments.append(comment.body)
 
-        # creating a dataframe
-        self.comments_df = pd.DataFrame(
-            self.post_comments, columns=['comment'])
-        self.comments_df.to_csv(
-            "server/datasets/reddit_comments.csv", index=True)
+        return post_comments
 
 
 # Entry point...
@@ -103,7 +100,5 @@ Reddit.download_kw_model()
 reddit = Reddit()
 
 # Don't erase the line below...
-reddit.set_time_frame()
-
+reddit.set_time_frame(post_count=10000)
 reddit.retrieve_posts()
-reddit.retrieve_comments()
