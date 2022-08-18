@@ -4,11 +4,12 @@ import numpy as np
 import tflearn
 import tensorflow as tf
 import json
+import pickle
 import random
 
 '''
 HeyBuddy: An AI Chatbot that heals you
-TRAINING FOR SEQ2SEQ MACHINE LEARNING
+TRAINING MODULE FOR SEQ2SEQ MACHINE LEARNING
 
 Developed and Designed by John Seong.
 Served under the MIT License.
@@ -24,12 +25,13 @@ class Train(object):
 
     def retrieve(self):
         #Loading intents.json
-        with open('server/intents.json') as intents:
+        with open('server/datasets/intents.json') as intents:
             self.data = json.load(intents)
 
         global stemmer
         stemmer = LancasterStemmer()
 
+    def parse(self):
         # getting informations from intents.json--
         self.words = []
         self.labels = []
@@ -77,6 +79,9 @@ class Train(object):
         self.training = np.array(self.training)
         self.output = np.array(self.output)
 
+        with open('server/datasets/data.pickle','wb') as f:
+            pickle.dump((self.words, self.labels, self.training, self.output), f)
+
     def create_model(self):
         net = tflearn.input_data(shape=[None, len(self.training[0])])
         net = tflearn.fully_connected(net, 10)
@@ -86,8 +91,15 @@ class Train(object):
         net = tflearn.regression(net)
 
         self.model = tflearn.DNN(net)
-        self.model.fit(self.training, self.output, n_epoch=500, batch_size=8, show_metric=True)
-        self.model.save('model.tflearn')
+
+        # When runtime error occurs at this point... use the tutorial: https://stackoverflow.com/questions/65022518/runtimeerror-attempted-to-use-a-closed-session-with-tflearn-dnn
+        
+        try:
+            self.model.load("server/datasets/model.tflearn")
+        except:
+            self.model = tflearn.DNN(net)
+            self.model.fit(self.training, self.output, n_epoch=500, batch_size=8, show_metric=True)
+            self.model.save('server/datasets/model.tflearn')
 
     @staticmethod
     def bag_of_words(s, words):
@@ -108,8 +120,15 @@ class Train(object):
 
     def start_training(self):
         self.retrieve()
-        self.preprocess()
-        self.hot_encode()
+
+        try:
+            with open('server/datasets/data.pickle','rb') as f:
+                self.words, self.labels, self.training, self.output = pickle.load(f)
+        except:
+            self.parse()
+            self.preprocess()
+            self.hot_encode()
+            
         self.create_model()
 
     def start_chatting(self):
@@ -130,7 +149,7 @@ class Train(object):
 
                 if tg['tag'] == tag:
                     responses = tg['responses']
-                    print("Bot:\t" + random.choice(responses))
+                    print("Bot: " + random.choice(responses))
 
 # Entry point...
 Train.download_nltk()
