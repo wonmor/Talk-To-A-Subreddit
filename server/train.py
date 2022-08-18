@@ -16,6 +16,8 @@ Served under the MIT License.
 
 Used the tutorial: 
 https://www.pycodemates.com/2021/11/build-a-AI-chatbot-using-python-and-deep-learning.html
+
+ACTIVATE VIRTUAL ENV. ON WINDOWS: venv\Scripts\Activate.ps1 
 '''
 
 class Train(object):
@@ -112,7 +114,7 @@ class Train(object):
             print("Need to retrieve the data first!")
 
         for s_word in s_words:
-            for i, w in enumerate(words):
+            for i, w in enumerate(words): 
                 if w == s_word:
                     bag[i] = 1
 
