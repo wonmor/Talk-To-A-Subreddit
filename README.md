@@ -9,7 +9,7 @@
 - Flask
 - TensorFlow
 - TFLearn
-- SciKit
+- Natural Language Toolkit
 - React
 - React Three Fiber
 - Chakra UI
