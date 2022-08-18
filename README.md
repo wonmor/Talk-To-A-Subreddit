@@ -8,7 +8,7 @@
 ## Dependencies
 - Flask
 - TensorFlow
-- Keras
+- TFLearn
 - SciKit
 - React
 - React Three Fiber
