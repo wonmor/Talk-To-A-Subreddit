@@ -4,7 +4,6 @@ import numpy as np
 import tflearn
 import tensorflow as tf
 import json
-import pickle
 import random
 
 '''
@@ -113,8 +112,29 @@ class Train(object):
         self.hot_encode()
         self.create_model()
 
+    def start_chatting(self):
+        while True:
+            inp = input("\n\nYou: ")
+            if inp.lower() == 'quit':
+                break
+
+        #Porbability of correct response 
+            results = self.model.predict([self.bag_of_words(inp, self.words)])
+
+        # Picking the greatest number from probability
+            results_index = np.argmax(results)
+
+            tag = self.labels[results_index]
+
+            for tg in self.data['intents']:
+
+                if tg['tag'] == tag:
+                    responses = tg['responses']
+                    print("Bot:\t" + random.choice(responses))
+
 # Entry point...
 Train.download_nltk()
 train = Train()
 train.start_training()
+train.start_chatting()
 

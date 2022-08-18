@@ -30,9 +30,13 @@ def create_app():
     app = Flask(__name__, static_folder='../client/build', static_url_path='/')
     
     from . import api
+
     load_dotenv()
 
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+
+    app.config.from_pyfile('config.cfg')
+
     app.register_blueprint(api.bp)
     
     global socketio

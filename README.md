@@ -7,6 +7,7 @@
 
 ## Dependencies
 - Flask
+- MongoDB
 - TensorFlow
 - TFLearn
 - Natural Language Toolkit
