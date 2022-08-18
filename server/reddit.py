@@ -27,10 +27,10 @@ class Reddit(object):
         kw_model = KeyBERT(model='all-mpnet-base-v2')
 
     @staticmethod
-    def extract_keywords(full_text="Hello, I am nobody. I am here to help you.", number_of_words=1):
+    def extract_keywords(full_text="Hello, I am nobody. I am here to help you.", upper_range=1, number_of_words=1):
         keywords = kw_model.extract_keywords(full_text,
 
-                                             keyphrase_ngram_range=(1, 1),
+                                             keyphrase_ngram_range=(1, upper_range),
 
                                              stop_words='english',
 
@@ -57,7 +57,7 @@ class Reddit(object):
             # Title of each post
             self.posts_dict["Title"].append(post.title)
 
-            self.posts_dict["Tag"].append(Reddit.extract_keywords(post.title, 1))
+            self.posts_dict["Tag"].append(Reddit.extract_keywords(post.title, 1, 1))
 
             # Text inside a post
             self.posts_dict["Post Text"].append(post.selftext)
