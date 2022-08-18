@@ -1,5 +1,5 @@
 # HeyBuddy
-**HeyBuddy** is an AI chatbot that heals you. Powered by **deep learning**, using the Seq2Seq model.
+**HeyBuddy** is an therapy AI chatbot that heals you. Powered by **deep learning**, using the Seq2Seq model.
 
 The bot primarily learns from Reddit's posts and comments from mental health communities to not only converse naturally, but also give out practical advices to everyday people.
 
