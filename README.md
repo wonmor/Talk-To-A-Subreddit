@@ -1,5 +1,6 @@
 # HeyBuddy
 **HeyBuddy** is an AI chatbot that heals you. Powered by **deep learning**, using the Seq2Seq model.
+
 The bot learns from Reddit's posts and comments to not only converse naturally, but also give out practical advices to everyday people.
 
 ### [Launch Website](https://heybuddybot.herokuapp.com)
