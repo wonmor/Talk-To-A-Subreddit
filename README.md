@@ -1,7 +1,7 @@
 # Talk to a Subreddit
-**Talk to a Subreddit** is a beautiful AI chatbot that heals you in the most therapeutic way possible. Powered by **BERT** and **deep learning**, using the Seq2Seq model with the help of Google Tensorflow.
+**Talk to a Subreddit** is an AI chatbot that heals you in the most therapeutic way possible. Powered by **BERT** and **deep learning**, using the Seq2Seq model with the help of Google Tensorflow.
 
-The bot primarily learns from Reddit's posts and comments. This large dataset comes from different subreddits; our goal is to not only closely model our national lizard Mark Zuckerberg's behaviour, but also give out unnecessary advices to geeks and nerds on the internet.
+The bot primarily learns from Reddit's posts and comments. This large dataset comes from different subreddits; our goal is to not only closely model the way redditors talk, but also give out unnecessary advices to geeks and nerds on the internet.
 
 ### [Launch Website](https://heybuddybot.herokuapp.com)
 
