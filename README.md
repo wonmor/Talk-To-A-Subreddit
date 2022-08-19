@@ -16,9 +16,9 @@ The bot primarily learns from Reddit's posts and comments. This large dataset co
 - MongoDB
 - TensorFlow
 - TFLearn
-- Natural Language Toolkit
+- Natural Language Toolkit (NLTK)
 - KeyBERT
-- Python Reddit API Wrapper
+- Python Reddit API Wrapper (PRAW)
 - React
 - React Three Fiber
 - Chakra UI
