@@ -8,7 +8,7 @@ import os
 
 '''
 ----------------------------------------------------------------
-A RESTful API THAT POWERS THE AI CHATBOT HEYBUDDY
+A RESTful API THAT POWERS THE AI CHATBOT "TALK TO A SUBREDDIT"
 DEVELOPED AND DESIGNED BY JOHN SEONG
 ----------------------------------------------------------------
 '''

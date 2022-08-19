@@ -1,7 +1,7 @@
-# HeyBuddy
-**HeyBuddy** is a therapy AI chatbot that heals you. Powered by **BERT** and **deep learning**, using the Seq2Seq model with the help of Google Tensorflow.
+# Talk to a Subreddit
+**Talk to a Subreddit** is a therapy AI chatbot that heals you in the most theraputic way possible. Powered by **BERT** and **deep learning**, using the Seq2Seq model with the help of Google Tensorflow.
 
-The bot primarily learns from Reddit's posts and comments. This large dataset comes from different mental health subreddits; our goal is to not only make it converse naturally like a real human being, but also give out practical advices to everyday people.
+The bot primarily learns from Reddit's posts and comments. This large dataset comes from different subreddits; our goal is to not only make it converse unnaturally like Mark Zuckerberg, but also give out unnecessary advices to geeks and nerds on the internet.
 
 ### [Launch Website](https://heybuddybot.herokuapp.com)
 

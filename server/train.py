@@ -14,7 +14,7 @@ import codecs
 from reddit import Reddit
 
 '''
-HeyBuddy: An AI Chatbot that heals you
+Talk to a Subreddit: An AI Chatbot
 TRAINING MODULE FOR SEQ2SEQ MACHINE LEARNING
 
 Developed and Designed by John Seong.
@@ -31,6 +31,15 @@ https://towardsdatascience.com/how-to-apply-continual-learning-to-your-machine-l
 
 USEFUL TIPS:
 To activate virtual environment on Windows, simply type venv\Scripts\Activate.ps1 on Windows Powershell (different from macOS)
+
+HOW TO INSTALL TENSORFLOW ON A MACOS (ARM64, a.k.a. Apple Silicon) DEVICE:
+    I was able to install tensorflow-macos and tensrflow-metal on intel based iMac
+    $ python3 -m venv tensorflow-metal-test
+    $ source tensorflow-metal-test/bin/activate
+    $ cd tensorflow-metal-test/
+    $ python -m pip install -U pip
+    $ pip install tensorflow-macos
+    $ pip install tensorflow-metal
 '''
 
 class Train(object):
@@ -270,6 +279,7 @@ class Train(object):
             
 def start_bot(debug_mode):
     # Entry point...
+    Reddit.download_kw_model()
     Train.download_nltk()
     train = Train(debug_mode)
     train.start_training()

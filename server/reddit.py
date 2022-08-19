@@ -7,7 +7,7 @@ import os
 from keybert import KeyBERT
 
 '''
-HeyBuddy: An AI Chatbot that heals you
+Talk to a Subreddit: An AI Chatbot
 PARSING UTILITY FOR REDDIT
 
 Developed and Designed by John Seong.
@@ -21,7 +21,7 @@ https://www.analyticsvidhya.com/blog/2022/01/four-of-the-easiest-and-most-effect
 '''
 
 class Reddit(object):
-    def __init__(self):
+    def __init__(self, subreddit_name):
         env_client_id = os.environ.get("reddit_client_id")
         env_client_secret = os.environ.get("reddit_client_secret")
         env_user_agent = os.environ.get("reddit_user_agent")
@@ -30,6 +30,8 @@ class Reddit(object):
         reddit_read_only = praw.Reddit(client_id=env_client_id,         # your client id
                                        client_secret=env_client_secret,      # your client secret
                                        user_agent=env_user_agent)        # your user agent
+        
+        self.subreddit_name = subreddit_name
 
     @staticmethod
     def download_kw_model():
@@ -56,10 +58,10 @@ class Reddit(object):
 
         return keywords_list
 
-    def set_time_frame(self, subreddit_name="aspergers", post_count=100):
+    def set_time_frame(self, post_count=100):
         print("Setting the time frame for reddit parsing...")
 
-        subreddit = reddit_read_only.subreddit(subreddit_name)
+        subreddit = reddit_read_only.subreddit(self.subreddit_name)
 
         self.posts = subreddit.hot(limit=post_count)
         # Scraping the top posts of the current month
@@ -111,11 +113,11 @@ class Reddit(object):
 
         return post_comments
 
-def start_parsing_reddit():
+def start_parsing_reddit(subreddit_name="aspergers"):
     # Entry point...
     Reddit.download_kw_model()
 
-    reddit = Reddit()
+    reddit = Reddit(subreddit_name)
 
     # Don't erase the line below...
     reddit.set_time_frame(post_count=10000)
