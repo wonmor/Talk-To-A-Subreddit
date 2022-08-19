@@ -1,5 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 
+import userInfoReducer from './states/userInfoSlice'
+
 /*
 ╔═══╦═══╦═══╦═══╦════╗─╔═══╦═══╦═══╦╗─╔╦═╗╔═╗╔═══╦═══╦═══╦╗─╔╦═══╦═══╦═══╦═══╗
 ║╔═╗║╔══╣╔═╗║╔═╗║╔╗╔╗║─║╔═╗║╔══╩╗╔╗║║─║╠╗╚╝╔╝║╔═╗║╔══╩╗╔╗║║─║║╔═╗║╔══╣╔═╗║╔═╗║
@@ -23,5 +25,7 @@ export default configureStore({
     -------
     None
     */
-    reducer: {},
+    reducer: {
+        userInfo: userInfoReducer
+    },
 })

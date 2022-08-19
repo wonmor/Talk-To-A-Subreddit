@@ -12,6 +12,9 @@ The bot primarily learns from Reddit's posts and comments. This large dataset co
 ---
 
 ## Dependencies
+
+### Server
+
 - Flask
 - MongoDB
 - TensorFlow
@@ -19,8 +22,14 @@ The bot primarily learns from Reddit's posts and comments. This large dataset co
 - Natural Language Toolkit (NLTK)
 - KeyBERT
 - Python Reddit API Wrapper (PRAW)
+
+---
+
+### Client
+
 - React
-- React Three Fiber
+- ThreeJS
+- Redux
 - Chakra UI
 - Axios
 - SocketIO

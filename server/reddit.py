@@ -6,9 +6,19 @@ import os
 
 from keybert import KeyBERT
 
-# Tutorial used: https://www.geeksforgeeks.org/scraping-reddit-using-python/
-# Keyword extraction: https://www.analyticsvidhya.com/blog/2022/01/four-of-the-easiest-and-most-effective-methods-of-keyword-extraction-from-a-single-text-using-python/
+'''
+HeyBuddy: An AI Chatbot that heals you
+PARSING UTILITY FOR REDDIT
 
+Developed and Designed by John Seong.
+Served under the MIT License.
+
+Tutorial used:
+https://www.geeksforgeeks.org/scraping-reddit-using-python/
+
+Keyword extraction:
+https://www.analyticsvidhya.com/blog/2022/01/four-of-the-easiest-and-most-effective-methods-of-keyword-extraction-from-a-single-text-using-python/
+'''
 
 class Reddit(object):
     def __init__(self):
@@ -110,3 +120,6 @@ def start_parsing_reddit():
     # Don't erase the line below...
     reddit.set_time_frame(post_count=10000)
     reddit.retrieve_posts()
+
+# Comment the line below upon running train.py...
+# start_parsing_reddit()

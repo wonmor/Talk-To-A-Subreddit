@@ -28,10 +28,14 @@ https://towardsdatascience.com/keyword-extraction-a-benchmark-of-7-algorithms-in
 Continual learning implementation tutorial (make it retrieve reddit database automatically at the end of every month):
 https://towardsdatascience.com/how-to-apply-continual-learning-to-your-machine-learning-models-4754adcd7f7f
 
-ACTIVATE VIRTUAL ENV. ON WINDOWS: venv\Scripts\Activate.ps1 
+USEFUL TIPS:
+To activate virtual environment on Windows, simply type venv\Scripts\Activate.ps1 on Windows Powershell (different from macOS)
 '''
 
 class Train(object):
+    def __init__(self, debug_mode=False):
+        self.debug_mode = debug_mode
+
     @staticmethod
     def download_nltk():
         print("Downloading the NLTK models...")
@@ -213,8 +217,8 @@ class Train(object):
 
                 for key, value in enumerate(self.reddit_posts['Tag'].values()):
                     # Converting the string to list...
-                    temp_value = str(value).replace("[", "").replace("]", "").replace("'", "").split(", ")
-                    temp_tag = str(tag).replace("[", "").replace("]", "").replace("'", "").split(", ")
+                    temp_value = str(value).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
+                    temp_tag = str(tag).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
                     temp_tag_synonyms = []
 
                     # Find the synonyms of the tag and also take into account...
@@ -223,10 +227,12 @@ class Train(object):
                             for i in syn.lemmas():
                                 temp_tag_synonyms.append(i.name())
 
+                    # To-Do: Add a feature where the program only searches for a snonym if and only if there's no matching word detected in the corresponding list...
+
                     temp_tag += temp_tag_synonyms
 
-                    print(temp_tag)
-                    print(temp_value)
+                    print(temp_tag) if self.debug_mode else None
+                    print(temp_value) if self.debug_mode else None
 
                     flag = []
                     res = False
@@ -237,7 +243,7 @@ class Train(object):
                         if t in temp_value:
                             flag.append(t)
 
-                    print(flag)
+                    print(flag) if self.debug_mode else None
 
                     if flag:
                         res = True
@@ -246,23 +252,23 @@ class Train(object):
                     if temp_tag in temp_value or temp_tag == temp_value:
                         res = True
 
-                    print(res)
+                    print(res) if self.debug_mode else None
                     
                     if res:
-                        print("Matching key found!")
+                        print("Matching key found!") if self.debug_mode else None
 
-                        comment_list.append(str(self.reddit_posts['Total Comments']).replace("[", "").replace("]", "").replace("'", "").split(", ")[key])
+                        comment_list.append(str(self.reddit_posts['Total Comments']).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")[key])
 
                 print("Bot: " + random.choice(comment_list))
 
                 self.use_reddit_comments = False
             
-def start_training():
+def start_bot(debug_mode):
     # Entry point...
     Train.download_nltk()
-    train = Train()
+    train = Train(debug_mode)
     train.start_training()
     train.start_chatting()
 
-start_training()
+start_bot(debug_mode=False)
 

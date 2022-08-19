@@ -1,4 +1,4 @@
-import { Box, Input, Text } from '@chakra-ui/react'
+import { Box, HStack, Input, Text } from '@chakra-ui/react'
 
 export default function Home() {
     return (
@@ -16,7 +16,9 @@ export default function Home() {
             <div className="mt-10 md:mt-0">I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.</div>
         </Text>
 
-        <Input placeholder='Enter your response...' width={"50%"} className="generic-text mb-5" />
+        <HStack spacing={4}>
+        <Input placeholder='Enter your response...' width={"75%"} className="generic-text mb-5" />
+        </HStack>
 
         <Text className="text-xl">
             View our Zero-tolerant <span className="text-blue-200 font-bold hover:underline">Privacy Policy</span>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
