@@ -25,7 +25,7 @@ The bot primarily learns from Reddit's posts and comments. This large dataset co
 ### Server
 
 - Flask
-- MongoDB
+- SQLAlchemy
 - TensorFlow
 - TFLearn
 - Natural Language Toolkit (NLTK)
