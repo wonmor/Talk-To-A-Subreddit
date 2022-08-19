@@ -9,6 +9,7 @@ import tensorflow as tf
 import json
 import pickle
 import random
+import codecs
 
 from reddit import Reddit
 
@@ -186,7 +187,7 @@ class Train(object):
         self.create_model()
 
     def start_chatting(self):
-        print("Chatting process has been started!")
+        print("\n\nChatting process has been started!")
 
         while True:
             inp = input("\n\nYou: ")
@@ -206,7 +207,7 @@ class Train(object):
             for tg in self.data['intents']:
                 if tg['tag'] == tag:
                     responses = tg['responses']
-                    print("Bot: " + random.choice(responses))
+                    print("\n\nBot: " + random.choice(responses))
                     self.use_reddit_comments = False
                     break
                 else:
@@ -214,6 +215,8 @@ class Train(object):
 
             if self.use_reddit_comments:
                 comment_list = []
+
+                print(f"\n\nThinking about something related to {tag.strip('[').strip(']')}...")
 
                 for key, value in enumerate(self.reddit_posts['Tag'].values()):
                     # Converting the string to list...
@@ -239,7 +242,8 @@ class Train(object):
                     
                     # This part of the code is only used when there're more than one word for the tag of each question (x variable)...
                     for t in temp_tag:
-                        print(f"Current t value: {t}")
+                        print(f"Current t value: {t}") if self.debug_mode else None
+
                         if t in temp_value:
                             flag.append(t)
 
@@ -259,7 +263,8 @@ class Train(object):
 
                         comment_list.append(str(self.reddit_posts['Total Comments']).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")[key])
 
-                print("Bot: " + random.choice(comment_list))
+                # Print the decoded encoded string of a random selection that has been made amongst closest matches determined by the trained data...
+                print("\n\nBot: " + codecs.decode(random.choice(comment_list).replace("\\", "").strip('\"').strip('\'').capitalize(), 'unicode_escape'))
 
                 self.use_reddit_comments = False
             
