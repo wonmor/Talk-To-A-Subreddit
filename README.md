@@ -1,4 +1,4 @@
-<img width="700" alt="logo" src="https://user-images.githubusercontent.com/35755386/185639454-b175c9fc-3978-40c0-9663-02ed382fa122.svg">
+<img width="700" alt="logo" src="client/public/logo.png">
 
 **Talk to a Subreddit** is an AI chatbot that heals you in the most therapeutic way possible. Powered by **BERT** and **deep learning**, using the Seq2Seq model with the help of Google Tensorflow.
 
@@ -10,7 +10,7 @@ The bot primarily learns from Reddit's posts and comments. This large dataset co
 
 ## Feature 1: Your Stupidly Loyal Friend
 
-<img width="700" alt="Screenshot 2022-08-18 152956" src="client/public/logo.png">
+<img width="700" alt="Screenshot 2022-08-18 152956" src="https://user-images.githubusercontent.com/35755386/185309748-65b4ab55-7615-45f4-a49e-a0ac77175223.png">
 
 ---
 
