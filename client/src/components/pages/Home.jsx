@@ -48,7 +48,7 @@ export default function Home() {
                 </Stack>
 
                 {isError && (
-                        <FormErrorMessage><span>Invalid entry. Please try it again.</span></FormErrorMessage>
+                        <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
                 )}
             </FormControl>
 
