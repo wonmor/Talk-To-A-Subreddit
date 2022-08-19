@@ -1,5 +1,7 @@
 import nltk
 from nltk.stem.lancaster import LancasterStemmer
+from nltk.corpus import wordnet
+
 import pandas as pd
 import numpy as np
 import tflearn
@@ -32,9 +34,11 @@ ACTIVATE VIRTUAL ENV. ON WINDOWS: venv\Scripts\Activate.ps1
 class Train(object):
     @staticmethod
     def download_nltk():
-        print("Downloading the NLTK model...")
+        print("Downloading the NLTK models...")
 
         nltk.download("punkt")
+        nltk.download('wordnet')
+        nltk.download('omw-1.4')
 
     def retrieve(self):
         print("Retrieving the user-generated dataset...")
@@ -203,25 +207,34 @@ class Train(object):
                     break
                 else:
                     self.use_reddit_comments = True
-            
+
             if self.use_reddit_comments:
-                urls = []
                 comment_list = []
 
                 for key, value in enumerate(self.reddit_posts['Tag'].values()):
                     # Converting the string to list...
-                    value = str(value).replace("[", "").replace("]", "").replace("'", "").split(", ")
-                    tag = str(tag).replace("[", "").replace("]", "").replace("'", "").split(", ")
+                    temp_value = str(value).replace("[", "").replace("]", "").replace("'", "").split(", ")
+                    temp_tag = str(tag).replace("[", "").replace("]", "").replace("'", "").split(", ")
+                    temp_tag_synonyms = []
 
-                    print(tag)
-                    print(value)
+                    # Find the synonyms of the tag and also take into account...
+                    for temp_single_tag in temp_tag:
+                        for syn in wordnet.synsets(temp_single_tag):
+                            for i in syn.lemmas():
+                                temp_tag_synonyms.append(i.name())
+
+                    temp_tag += temp_tag_synonyms
+
+                    print(temp_tag)
+                    print(temp_value)
 
                     flag = []
                     res = False
                     
-                    for t in tag:
+                    # This part of the code is only used when there're more than one word for the tag of each question (x variable)...
+                    for t in temp_tag:
                         print(f"Current t value: {t}")
-                        if t in value:
+                        if t in temp_value:
                             flag.append(t)
 
                     print(flag)
@@ -229,7 +242,8 @@ class Train(object):
                     if flag:
                         res = True
 
-                    if tag in value or tag == value:
+                    # Used when the tag only contains one word each...
+                    if temp_tag in temp_value or temp_tag == temp_value:
                         res = True
 
                     print(res)
@@ -237,20 +251,18 @@ class Train(object):
                     if res:
                         print("Matching key found!")
 
-                        urls.append(self.reddit_posts['Post URL'][key])
-
-                if urls:
-                    for url in urls:
-                        comment_list += Reddit.retrieve_comments(post_url=url)
+                        comment_list.append(str(self.reddit_posts['Total Comments']).replace("[", "").replace("]", "").replace("'", "").split(", ")[key])
 
                 print("Bot: " + random.choice(comment_list))
 
                 self.use_reddit_comments = False
             
+def start_training():
+    # Entry point...
+    Train.download_nltk()
+    train = Train()
+    train.start_training()
+    train.start_chatting()
 
-# Entry point...
-Train.download_nltk()
-train = Train()
-train.start_training()
-train.start_chatting()
+start_training()
 

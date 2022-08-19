@@ -54,7 +54,7 @@ class Reddit(object):
         self.posts = subreddit.hot(limit=post_count)
         # Scraping the top posts of the current month
 
-        self.posts_dict = {"Title": [], "Tag": [], "Post Text": [],
+        self.posts_dict = {"Title": [], "Tag": [],
                            "ID": [], "Score": [],
                            "Total Comments": [], "Post URL": []
                            }
@@ -66,10 +66,7 @@ class Reddit(object):
             # Title of each post
             self.posts_dict["Title"].append(post.title)
 
-            self.posts_dict["Tag"].append(Reddit.extract_keywords(post.title, 1, 5))
-
-            # Text inside a post
-            self.posts_dict["Post Text"].append(post.selftext)
+            self.posts_dict["Tag"].append(Reddit.extract_keywords(post.title, 1, 2))
 
             # Unique ID of each post
             self.posts_dict["ID"].append(post.id)
@@ -78,7 +75,7 @@ class Reddit(object):
             self.posts_dict["Score"].append(post.score)
 
             # Total number of comments inside the post
-            self.posts_dict["Total Comments"].append(post.num_comments)
+            self.posts_dict["Total Comments"].append(Reddit.retrieve_comments(post.url))
 
             # URL of each post
             self.posts_dict["Post URL"].append(post.url)
@@ -104,12 +101,12 @@ class Reddit(object):
 
         return post_comments
 
+def start_parsing_reddit():
+    # Entry point...
+    Reddit.download_kw_model()
 
-# Entry point...
-Reddit.download_kw_model()
+    reddit = Reddit()
 
-reddit = Reddit()
-
-# Don't erase the line below...
-reddit.set_time_frame(post_count=10000)
-reddit.retrieve_posts()
+    # Don't erase the line below...
+    reddit.set_time_frame(post_count=10000)
+    reddit.retrieve_posts()
