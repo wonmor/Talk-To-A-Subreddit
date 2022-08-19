@@ -23,4 +23,5 @@ The bot primarily learns from Reddit's posts and comments. This large dataset co
 - React Three Fiber
 - Chakra UI
 - Axios
+- SocketIO
 - Docker
