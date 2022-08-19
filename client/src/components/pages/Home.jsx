@@ -1,4 +1,5 @@
-import { Box, HStack, Input, Text } from '@chakra-ui/react'
+import { Box, Stack, Input, Text, Button } from '@chakra-ui/react'
+import { MdDoneOutline } from "react-icons/md"
 
 export default function Home() {
     return (
@@ -16,9 +17,12 @@ export default function Home() {
                 <div className="mt-10 md:mt-0">I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.</div>
             </Text>
 
-            <HStack spacing={4}>
-            <Input placeholder='Enter your response...' width={"75%"} className="generic-text mb-5" />
-            </HStack>
+            <Stack direction={['column', 'row']} spacing={1} marginBottom={"15px"}>
+                <Input placeholder='Enter your response...' marginRight={"10px"} width={"75%"} className="generic-text mb-5" />
+                <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid'>
+                    Submit
+                </Button>
+            </Stack>
 
             <Text className="text-xl">
                 View our Zero-tolerant <span className="text-blue-200 font-bold hover:underline">Privacy Policy</span>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
