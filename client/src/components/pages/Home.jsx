@@ -1,6 +1,8 @@
 import { Box, Stack, Input, Text, Button } from '@chakra-ui/react'
 import { MdDoneOutline } from "react-icons/md"
 
+import { useSelector, useDispatch, Provider } from "react-redux";
+
 export default function Home() {
     return (
         <Box className="flex flex-col border-t border-gray-600 md:border-transparent">
@@ -19,17 +21,15 @@ export default function Home() {
 
             <Stack direction={['column', 'row']} spacing={1} marginBottom={"15px"}>
                 <Input placeholder='Enter your response...' marginRight={"10px"} width={"75%"} className="generic-text mb-5" />
-                <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid'>
+                <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={() => {
+                    
+                }}>
                     Submit
                 </Button>
             </Stack>
 
-            <Text className="text-xl">
+            <Text className="text-xl mb-5">
                 View our Zero-tolerant <span className="text-blue-200 font-bold hover:underline">Privacy Policy</span>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
-            </Text>
-
-            <Text className="mb-5 text-xl mt-10 md:mt-0">
-                We advise you to enter a <b>fake name</b> just for our bot to recognize you the next time you talk to them.
             </Text>
         </Box>
     );
