@@ -23,11 +23,13 @@ class Reddit(object):
 
     @staticmethod
     def download_kw_model():
+        print("Downloading the kw_model...")
+
         global kw_model
         kw_model = KeyBERT(model='all-mpnet-base-v2')
 
     @staticmethod
-    def extract_keywords(full_text="Hello, I am nobody. I am here to help you.", upper_range=1, number_of_words=1):
+    def extract_keywords(full_text="Hello, I am nobody. I am here to help you.", upper_range=1, number_of_words=5):
         keywords = kw_model.extract_keywords(full_text,
 
                                              keyphrase_ngram_range=(1, upper_range),
@@ -39,9 +41,14 @@ class Reddit(object):
                                              top_n=number_of_words)
 
         keywords_list = list(dict(keywords).keys())
+
+        print(f"Extracting the keywords: {keywords_list}")
+
         return keywords_list
 
     def set_time_frame(self, subreddit_name="aspergers", post_count=100):
+        print("Setting the time frame for reddit parsing...")
+
         subreddit = reddit_read_only.subreddit(subreddit_name)
 
         self.posts = subreddit.hot(limit=post_count)
@@ -54,10 +61,12 @@ class Reddit(object):
 
     def retrieve_posts(self):
         for post in self.posts:
+            print(f"Parsing the Reddit post: {post.title}")
+
             # Title of each post
             self.posts_dict["Title"].append(post.title)
 
-            self.posts_dict["Tag"].append(Reddit.extract_keywords(post.title, 1, 1))
+            self.posts_dict["Tag"].append(Reddit.extract_keywords(post.title, 1, 5))
 
             # Text inside a post
             self.posts_dict["Post Text"].append(post.selftext)
@@ -73,6 +82,8 @@ class Reddit(object):
 
             # URL of each post
             self.posts_dict["Post URL"].append(post.url)
+
+        print("Saving the parsed Reddit posts' database...")
 
         # Saving the data in a pandas dataframe
         self.top_posts = pd.DataFrame(self.posts_dict)
