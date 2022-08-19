@@ -1,4 +1,5 @@
-# Talk to a Subreddit
+<img width="700" alt="logo" src="https://user-images.githubusercontent.com/35755386/185639454-b175c9fc-3978-40c0-9663-02ed382fa122.svg">
+
 **Talk to a Subreddit** is an AI chatbot that heals you in the most therapeutic way possible. Powered by **BERT** and **deep learning**, using the Seq2Seq model with the help of Google Tensorflow.
 
 The bot primarily learns from Reddit's posts and comments. This large dataset comes from different subreddits; our goal is to not only closely model the way redditors talk, but also give out unnecessary advices to geeks and nerds on the internet.
