@@ -3,17 +3,23 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userInfoSlice = createSlice({
     name: 'userInfo',
     initialState: {
-        username: "Steve"
+        username: "Steve",
+        email: "stevemakinson@gmail.com"
     },
     reducers: {
-        setUserName: (state, action) => {
+        setUsername: (state, action) => {
             if (state.name !== action.payload) {
                 state.name = action.payload
+            }
+        },
+        setEmail: (state, action) => {
+            if (state.email !== action.payload) {
+                state.email = action.payload
             }
         }
     }
 })
 
-export const { setUserName } = userInfoSlice.actions
+export const { setUsername, setEmail } = userInfoSlice.actions
 
 export default userInfoSlice.reducer
