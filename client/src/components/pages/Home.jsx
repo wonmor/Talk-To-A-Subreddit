@@ -76,7 +76,7 @@ export default function Home() {
                         <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={() => {
                             dispatch(setUsername(""));
                         }}>
-                            Submit
+                            <span className="font-bold">Submit</span>
                         </Button>
                     </Stack>
 
