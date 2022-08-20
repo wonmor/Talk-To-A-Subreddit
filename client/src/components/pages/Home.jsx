@@ -3,7 +3,7 @@ import { MdDoneOutline } from "react-icons/md"
 
 import { useState, useRef, useEffect, Suspense } from 'react'
 
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from '@react-three/drei'
 
 import { useSelector, useDispatch } from "react-redux";
@@ -31,9 +31,13 @@ function Character(props) {
 
     useEffect(() => {
         if (group.current?.rotation) {
-          group.current.rotation.y += -180
+          group.current.rotation.y += -180;
         }
-    })
+    });
+
+    useFrame(() => {
+        group.current.rotation.y += 0.01;
+    });
   
     return (
       <group ref={group} {...props} dispose={null}>
