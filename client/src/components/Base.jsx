@@ -58,10 +58,12 @@ const Footer = () => {
             <IconButton
               as="a"
               href="https://www.linkedin.com/in/john-seong-9194321a9/"
+              target="_blank" 
+              rel="noopener noreferrer"
               aria-label="LinkedIn"
               icon={<FaLinkedin fontSize="1.25rem" />}
             />
-            <IconButton as="a" href="https://github.com/wonmor" aria-label="GitHub" icon={<FaGithub fontSize="1.25rem" />} />
+            <IconButton as="a" href="https://github.com/wonmor" target="_blank" rel="noopener noreferrer" aria-label="GitHub" icon={<FaGithub fontSize="1.25rem" />} />
           </ButtonGroup>
         </Stack>
         <Text fontSize="sm" color="subtle">
