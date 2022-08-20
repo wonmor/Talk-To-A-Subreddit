@@ -90,7 +90,7 @@ export default function Home() {
                 </Text>
             </Box>
 
-            <div style={{ width: "fit-parent", height: "85vh" }}>
+            <Box style={{ width: "fit-parent", height: "85vh" }}>
                 <Canvas camera={{ fov: 15, position: [-25, 0, 0] }}>
                     <Suspense fallback={null}>
                         <Character />
@@ -100,7 +100,7 @@ export default function Home() {
                     <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
                     <pointLight position={[-10, -10, -10]} />
                 </Canvas>
-            </div>
+            </Box>
         </>
     );
 }

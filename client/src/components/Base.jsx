@@ -1,6 +1,7 @@
 import './Base.css';
 
 import { useNavigate } from "react-router-dom";
+import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
 
 import {
   Box,
@@ -10,7 +11,10 @@ import {
   Link,
   Image,
   IconButton,
+  Container,
+  Text,
   Button,
+  ButtonGroup,
   Menu,
   MenuButton,
   MenuList,
@@ -42,6 +46,29 @@ function NavLink({ children }) {
       onClick={() => {navigate(`/${children}`)}}>
       {children}
     </Link>
+  );
+}
+
+const Footer = () => {
+  return (
+    <Container as="footer" role="contentinfo" py={{ base: '12', md: '16' }}>
+      <Stack spacing={{ base: '4', md: '5' }}>
+        <Stack justify="space-between" direction="row" align="center">
+          <ButtonGroup variant="outline">
+            <IconButton
+              as="a"
+              href="https://www.linkedin.com/in/john-seong-9194321a9/"
+              aria-label="LinkedIn"
+              icon={<FaLinkedin fontSize="1.25rem" />}
+            />
+            <IconButton as="a" href="https://github.com/wonmor" aria-label="GitHub" icon={<FaGithub fontSize="1.25rem" />} />
+          </ButtonGroup>
+        </Stack>
+        <Text fontSize="sm" color="subtle">
+          &copy; {new Date().getFullYear()} <b>John Seong</b>. Served under the <b>MIT</b> License.
+        </Text>
+      </Stack>
+    </Container>
   );
 }
 
@@ -121,6 +148,7 @@ export default function Base(props) {
         <Image className="logo-button" src="logo.svg" onClick={() => {navigate('/')}} marginBottom="20px" display={{ md: 'none' }} />
         {/* Main Content goes here... */}
         <props.content />
+        <Footer />
       </Box>
     </Box>
   );
