@@ -3,15 +3,37 @@ import { MdDoneOutline } from "react-icons/md"
 
 import { useState, useRef, useEffect, Suspense } from 'react'
 
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, extend } from "@react-three/fiber";
 import { useGLTF } from '@react-three/drei'
 
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+
 import { useSelector, useDispatch } from "react-redux";
+
+import quicksand from '../../assets/Quicksand.json';
 
 import {
     setUsername,
     setEmail,
 } from "../../states/userInfoSlice";
+
+function GroundPlane() {
+    return (
+      <mesh receiveShadow rotation={[5, 0, 0]} position={[0, -7.5, 0]}>
+        <planeBufferGeometry attach="geometry" args={[500, 500]} />
+        <meshStandardMaterial attach="material" color="gray" />
+      </mesh>
+    );
+  }
+  function BackDrop() {
+    return (
+      <mesh receiveShadow position={[0, -1, -5]}>
+        <planeBufferGeometry attach="geometry" args={[500, 500]} />
+        <meshStandardMaterial attach="material" color="gray" />
+      </mesh>
+    );
+  }
 
 function Character(props) {
     /*
@@ -44,7 +66,28 @@ function Character(props) {
         <primitive castShadow receiveShadow object={scene} />
       </group>
     );
-  }
+}
+
+function Loading(props) {
+    const group = useRef();
+
+    const font = new FontLoader().parse(quicksand);
+
+    extend({ TextGeometry });
+
+    useEffect(() => {
+        if (group.current?.rotation) {
+          group.current.rotation.y += -90;
+        }
+    });
+
+    return (
+        <mesh receiveShadow ref={group} {...props}>
+            <textGeometry args={['Loading...', {font, size: 1, height: 0.1}]} />
+            <meshPhongMaterial attach='material' color={'white'} />
+        </mesh>
+    );
+}
 
 export default function Home() {
     const dispatch = useDispatch();
@@ -59,8 +102,8 @@ export default function Home() {
 
     return (
         <>
-            <Box className="flex flex-col border-t border-gray-600 md:border-transparent">
-                <Text className="mt-2 md:mt-0 mb-2 text-5xl">
+            <Box className="flex flex-col border-t-2 border-white md:border-transparent">
+                <Text className="mt-5 md:mt-0 mb-2 text-5xl">
                     I am so <b>proud</b> of you for making all the way here.
                 </Text>
 
@@ -95,14 +138,19 @@ export default function Home() {
             </Box>
 
             <Box style={{ width: "fit-parent", height: "85vh" }}>
-                <Canvas className="border-b border-gray-600" camera={{ fov: 15, position: [-25, 0, 0] }}>
-                    <Suspense fallback={null}>
+                <Canvas className="border-2 border-gray-600 rounded" style={{ borderColor: "#bdefff" }} camera={{ fov: 15, position: [-25, 0, 0] }}>
+                    <mesh rotation={[-8, 0, 0]}>
+                        <GroundPlane />
+                        <BackDrop />
+                    </mesh>
+
+                    <Suspense fallback={(<Loading position={[0, 0, -1]} scale={0.4} />)}>
                         <Character />
                     </Suspense>
 
-                    <ambientLight intensity={0.5} />
-                    <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-                    <pointLight position={[-10, -10, -10]} />
+                    <ambientLight color="#bdefff" intensity={0.25} castShadow />
+                    <spotLight color="#bdefff" position={[10, 10, 10]} angle={0.15} penumbra={1} castShadow />
+                    <pointLight color="#ffbdf4" position={[-10, -10, -10]} castShadow />
                 </Canvas>
             </Box>
         </>

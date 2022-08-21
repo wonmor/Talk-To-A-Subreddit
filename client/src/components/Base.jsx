@@ -92,7 +92,10 @@ export default function Base(props) {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-            <Image className="logo-button" src="logo.svg" onClick={() => {navigate('/')}} />
+            <Image className="logo-button" src="logo.svg" onClick={() => {
+                navigate('/');
+                window.location.reload();
+              }} />
             <HStack
               as={'nav'}
               spacing={4}
@@ -147,7 +150,7 @@ export default function Base(props) {
       </Box>
 
       <Box p={4}>
-        <Image className="logo-button" src="logo.svg" onClick={() => {navigate('/')}} marginBottom="20px" display={{ md: 'none' }} />
+        <Image className="logo-button pb-2" src="logo.svg" onClick={() => {navigate('/')}} marginBottom="20px" display={{ md: 'none' }} />
         {/* Main Content goes here... */}
         <props.content />
         <Footer />
