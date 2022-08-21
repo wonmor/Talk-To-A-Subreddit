@@ -95,7 +95,7 @@ export default function Home() {
             </Box>
 
             <Box style={{ width: "fit-parent", height: "85vh" }}>
-                <Canvas camera={{ fov: 15, position: [-25, 0, 0] }}>
+                <Canvas className="border-b border-gray-600" camera={{ fov: 15, position: [-25, 0, 0] }}>
                     <Suspense fallback={null}>
                         <Character />
                     </Suspense>
