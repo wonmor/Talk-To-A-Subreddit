@@ -129,7 +129,7 @@ export default function Home() {
 
                 <FormControl isInvalid={isError}>
                     <Stack direction={['column', 'row']} spacing={2}>
-                        <Input placeholder='Enter your response...' marginRight={"10px"} width={"75%"} className="generic-text" />
+                        <Input placeholder='Enter your response...' value={input} marginRight={"10px"} width={"75%"} className="generic-text" />
 
                         <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={() => {
                             dispatch(setUsername(""));
