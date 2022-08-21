@@ -144,7 +144,7 @@ export default function Home() {
                 </FormControl>
 
                 <Text className="text-xl mb-5 mt-2">
-                    View our Zero-tolerant <span className="text-blue-200 font-bold hover:underline">Privacy Policy</span>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
+                    View our Zero-tolerant <a href="/" className="text-blue-200 font-bold hover:underline">Privacy Policy</a>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
                 </Text>
             </Box>
 
