@@ -123,9 +123,8 @@ export default function Home() {
                     </>
                 } show={show} />
 
-                <Text className="mb-5 text-2xl mt-5 md:mt-0">
-                    This is a safe space where you can share anything that you would like to.<br></br>
-                    <span className="mt-10 md:mt-0">I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.</span>
+                <Text className="mb-5 text-2xl mt-2 md:mt-0">
+                    I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.
                 </Text>
 
                 <FormControl isInvalid={isError}>
