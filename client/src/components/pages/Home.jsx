@@ -57,8 +57,8 @@ function Character(props) {
         }
     });
 
-    useFrame(() => {
-        group.current.rotation.y += 0.01;
+    useFrame((state, delta) => {
+        group.current.rotation.y += delta / 1.25;
     });
   
     return (
