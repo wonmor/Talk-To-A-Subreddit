@@ -11,6 +11,8 @@ import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 
 import { useSelector, useDispatch } from "react-redux";
 
+import { Mount } from "../utilities/Transitions";
+
 import quicksand from '../../assets/Quicksand.json';
 
 import {
@@ -18,22 +20,22 @@ import {
     setEmail,
 } from "../../states/userInfoSlice";
 
-function GroundPlane() {
+const GroundPlane = () => {
     return (
-      <mesh receiveShadow rotation={[5, 0, 0]} position={[0, -7.5, 0]}>
-        <planeBufferGeometry attach="geometry" args={[500, 500]} />
-        <meshStandardMaterial attach="material" color="gray" />
-      </mesh>
+        <mesh receiveShadow rotation={[5, 0, 0]} position={[0, -7.5, 0]}>
+            <planeBufferGeometry attach="geometry" args={[500, 500]} />
+            <meshStandardMaterial attach="material" color="gray" />
+        </mesh>
     );
-  }
-  function BackDrop() {
+}
+const BackDrop = () => {
     return (
-      <mesh receiveShadow position={[0, -1, -5]}>
-        <planeBufferGeometry attach="geometry" args={[500, 500]} />
-        <meshStandardMaterial attach="material" color="gray" />
-      </mesh>
+        <mesh receiveShadow position={[0, -1, -5]}>
+            <planeBufferGeometry attach="geometry" args={[500, 500]} />
+            <meshStandardMaterial attach="material" color="gray" />
+        </mesh>
     );
-  }
+}
 
 function Character(props) {
     /*
@@ -48,27 +50,27 @@ function Character(props) {
         A HTML markup that contains graphical elements
     */
     const group = useRef();
-  
+
     const { scene } = useGLTF('character.glb');
 
     useEffect(() => {
         if (group.current?.rotation) {
-          group.current.rotation.y += -180;
+            group.current.rotation.y += -180;
         }
     });
 
     useFrame((state, delta) => {
         group.current.rotation.y += delta / 1.25;
     });
-  
+
     return (
-      <group ref={group} {...props} dispose={null}>
-        <primitive castShadow receiveShadow object={scene} />
-      </group>
+        <group ref={group} {...props} dispose={null}>
+            <primitive castShadow receiveShadow object={scene} />
+        </group>
     );
 }
 
-function Loading(props) {
+function LoadingText(props) {
     const group = useRef();
 
     const font = new FontLoader().parse(quicksand);
@@ -77,13 +79,13 @@ function Loading(props) {
 
     useEffect(() => {
         if (group.current?.rotation) {
-          group.current.rotation.y += -90;
+            group.current.rotation.y += -90;
         }
     });
 
     return (
         <mesh receiveShadow ref={group} {...props}>
-            <textGeometry args={['Loading...', {font, size: 1, height: 0.1}]} />
+            <textGeometry args={['Loading...', { font, size: 1, height: 0.1 }]} />
             <meshPhongMaterial attach='material' color={'white'} />
         </mesh>
     );
@@ -93,6 +95,8 @@ export default function Home() {
     const dispatch = useDispatch();
 
     const [input, setInput] = useState('')
+    const [show, set] = useState(false);
+
     const handleInputChange = (e) => setInput(e.target.value)
 
     const isError = input === ''
@@ -100,16 +104,24 @@ export default function Home() {
     const username = useSelector((state) => state.userInfo.username);
     const email = useSelector((state) => state.userInfo.email);
 
+    useEffect(() => {
+        set(true);
+    }, [])
+
     return (
         <>
             <Box className="flex flex-col border-t-2 border-white md:border-transparent">
-                <Text className="mt-5 md:mt-0 mb-2 text-5xl">
-                    I am so <b>proud</b> of you for making all the way here.
-                </Text>
+                <Mount content={
+                    <>
+                        <Text className="mt-5 md:mt-0 mb-2 text-5xl">
+                            I am so <b>proud</b> of you for making all the way here.
+                        </Text>
 
-                <Text className="mb-5 text-5xl mt-5 md:mt-0">
-                    If you don't mind me asking, <b>what should I call you?</b>
-                </Text>
+                        <Text className="mb-5 text-5xl mt-5 md:mt-0">
+                            If you don't mind me asking, <b>what should I call you?</b>
+                        </Text>
+                    </>
+                } show={show} />
 
                 <Text className="mb-5 text-2xl mt-5 md:mt-0">
                     This is a safe space where you can share anything that you would like to.<br></br>
@@ -144,7 +156,7 @@ export default function Home() {
                         <BackDrop />
                     </mesh>
 
-                    <Suspense fallback={(<Loading position={[0, 0, -1]} scale={0.4} />)}>
+                    <Suspense fallback={(<LoadingText position={[0, 0, -1]} scale={0.4} />)}>
                         <Character />
                     </Suspense>
 
