@@ -18,6 +18,7 @@ import quicksand from '../../assets/Quicksand.json';
 import {
     setUsername,
     setEmail,
+    setGoodToGo
 } from "../../states/userInfoSlice";
 
 const GroundPlane = () => {
@@ -52,12 +53,6 @@ function Character(props) {
     const group = useRef();
 
     const { scene } = useGLTF('character.glb');
-
-    useEffect(() => {
-        if (group.current?.rotation) {
-            group.current.rotation.y += -180;
-        }
-    });
 
     useFrame((state, delta) => {
         group.current.rotation.y += delta / 1.25;
@@ -95,18 +90,31 @@ export default function Home() {
     const dispatch = useDispatch();
 
     const [input, setInput] = useState('')
+
     const [show, set] = useState(false);
+    const [isError, setIsError] = useState(false);
 
-    const handleInputChange = (e) => setInput(e.target.value)
+    const handleInputChange = (e) => setInput(e.target.value);
 
-    const isError = input === ''
+    const inputSubmitAction = (e) => {
+        e.preventDefault();
+        
+        const isInputEmpty = input === ''
+
+        setIsError(isInputEmpty);
+
+        if (!isInputEmpty) {
+            dispatch(setUsername(input));
+            dispatch(setGoodToGo(true));
+        }
+    };
 
     const username = useSelector((state) => state.userInfo.username);
-    const email = useSelector((state) => state.userInfo.email);
+    const goodToGo = useSelector((state) => state.userInfo.goodToGo);
 
     useEffect(() => {
         set(true);
-    }, [])
+    }, []);
 
     return (
         <>
@@ -114,12 +122,14 @@ export default function Home() {
                 <Mount content={
                     <>
                         <Text className="mt-5 md:mt-0 mb-2 text-5xl">
-                            I am so <b>proud</b> of you for making all the way here.
+                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <span>Welcome back, <b>{username}</b>.</span>}
                         </Text>
 
-                        <Text className="mb-5 text-5xl mt-5 md:mt-0">
-                            If you don't mind me asking, <b>what should I call you?</b>
-                        </Text>
+                        {!goodToGo &&
+                            <Text className="mb-5 text-5xl mt-5 md:mt-0">
+                                If you don't mind me asking, <b>what should I call you?</b>
+                            </Text>
+                        }
                     </>
                 } show={show} />
 
@@ -127,21 +137,21 @@ export default function Home() {
                     I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.
                 </Text>
 
-                <FormControl isInvalid={isError}>
-                    <Stack direction={['column', 'row']} spacing={2}>
-                        <Input placeholder='Enter your response...' value={input} marginRight={"10px"} width={"75%"} className="generic-text" />
+                <form onSubmit={inputSubmitAction}>
+                    <FormControl isRequired isInvalid={isError}>
+                        <Stack direction={['column', 'row']} spacing={2}>
+                            <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
 
-                        <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={() => {
-                            dispatch(setUsername(""));
-                        }}>
-                            <span className="font-bold">Submit</span>
-                        </Button>
-                    </Stack>
+                            <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
+                                <span className="font-bold">Submit</span>
+                            </Button>
+                        </Stack>
 
-                    {isError && (
-                        <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
-                    )}
-                </FormControl>
+                        {isError && (
+                            <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
+                        )}
+                    </FormControl>
+                </form>
 
                 <Text className="text-xl mb-5 mt-2">
                     View our Zero-tolerant <a href="/" className="text-blue-200 font-bold hover:underline">Privacy Policy</a>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
