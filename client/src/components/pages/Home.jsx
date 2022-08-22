@@ -1,7 +1,8 @@
-import { Box, Stack, Input, Text, Button, FormControl, FormErrorMessage } from '@chakra-ui/react'
-import { MdDoneOutline } from "react-icons/md"
+import { Box, Stack, Input, Text, Button, FormControl, FormErrorMessage } from '@chakra-ui/react';
 
-import { useState, useRef, useEffect, Suspense } from 'react'
+import { MdDoneOutline } from "react-icons/md";
+
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 
 import { Canvas, useFrame, extend } from "@react-three/fiber";

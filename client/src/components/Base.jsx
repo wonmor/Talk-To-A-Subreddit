@@ -1,31 +1,24 @@
 import './Base.css';
 
 import { useNavigate } from "react-router-dom";
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
+import { FaGithub, FaLinkedin } from 'react-icons/fa'
 
 import {
   Box,
   Flex,
-  Avatar,
   HStack,
   Link,
   Image,
   IconButton,
   Container,
   Text,
-  Button,
   ButtonGroup,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
 } from '@chakra-ui/react';
 
-import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
 const Links = ['Chat', 'API', 'About'];
 

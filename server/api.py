@@ -1,6 +1,8 @@
 import json
 import os
 
+from train import *
+
 from flask import Blueprint, request, current_app
 
 from flask_cors import CORS, cross_origin
@@ -34,8 +36,8 @@ CORS(bp, resources={r'/api/*': {'origins': '*'}})
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-@socketio.on('join')
-def join(message):
+@socketio.on('message')
+def chat(param):
     '''
     When a user joins the room, they are added to the room's list of users
     
@@ -48,31 +50,8 @@ def join(message):
     -------
     None
     '''
-    username = message['username']
-    room = message['room']
-    join_room(room)
-    print('RoomEvent: {} has joined the room {}\n'.format(username, room))
-    emit('ready', {username: username}, to=room, skip_sid=request.sid)
-
-@socketio.on('data')
-def transfer_data(message):
-    '''
-    This function is called when a user sends a message to the server.
-    
-    Parameters
-    ----------
-    message : dict
-        The message that the user sent to the server.
-
-    Returns
-    -------
-    None
-    '''
-    username = message['username']
-    room = message['room']
-    data = message['data']
-    print('DataEvent: {} has sent the data:\n {}\n'.format(username, data))
-    emit('data', data, to=room, skip_sid=request.sid)
+    start_bot()
+    emit('message', ({'Bot', param}))
 
 @socketio.on_error_default
 def default_error_handler(e):
