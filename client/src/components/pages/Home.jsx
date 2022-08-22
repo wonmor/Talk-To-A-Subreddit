@@ -122,7 +122,7 @@ export default function Home() {
                 <Mount content={
                     <>
                         <Text className="mt-5 md:mt-0 mb-2 text-5xl">
-                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <span>Welcome back, <b>{username}</b>.</span>}
+                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={<span>Welcome back, <b>{username}</b>.</span>} show={goodToGo}/>}
                         </Text>
 
                         {!goodToGo &&
