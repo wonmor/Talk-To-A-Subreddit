@@ -43,7 +43,7 @@ function NavLink({ children }) {
         textDecoration: 'none',
         bg: useColorModeValue('gray.700', 'gray.700'),
       }}
-      onClick={() => {navigate(`/${children}`)}}>
+      onClick={() => { navigate(`/${children}`) }}>
       {children}
     </Link>
   );
@@ -58,7 +58,7 @@ const Footer = () => {
             <IconButton
               as="a"
               href="https://www.linkedin.com/in/john-seong-9194321a9/"
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
               icon={<FaLinkedin fontSize="1.25rem" />}
@@ -93,9 +93,9 @@ export default function Base(props) {
           />
           <HStack spacing={8} alignItems={'center'}>
             <Image className="logo-button" src="logo.svg" onClick={() => {
-                navigate('/');
-                window.location.reload();
-              }} />
+              navigate('/');
+              window.location.reload();
+            }} />
             <HStack
               as={'nav'}
               spacing={4}
@@ -150,7 +150,10 @@ export default function Base(props) {
       </Box>
 
       <Box p={4}>
-        <Image className="logo-button pb-2" src="logo.svg" onClick={() => {navigate('/')}} marginBottom="20px" display={{ md: 'none' }} />
+        <Image className="logo-button pb-2" src="logo.svg" onClick={() => {
+          navigate('/');
+          window.location.reload();
+        }} marginBottom="20px" display={{ md: 'none' }} />
         {/* Main Content goes here... */}
         <props.content />
         <Footer />
