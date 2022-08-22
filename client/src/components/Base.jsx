@@ -94,7 +94,6 @@ export default function Base(props) {
           <HStack spacing={8} alignItems={'center'}>
             <Image className="logo-button" src="logo.svg" onClick={() => {
               navigate('/');
-              window.location.reload();
             }} />
             <HStack
               as={'nav'}
@@ -152,7 +151,6 @@ export default function Base(props) {
       <Box p={4}>
         <Image className="logo-button pb-2" src="logo.svg" onClick={() => {
           navigate('/');
-          window.location.reload();
         }} marginBottom="20px" display={{ md: 'none' }} />
         {/* Main Content goes here... */}
         <props.content />

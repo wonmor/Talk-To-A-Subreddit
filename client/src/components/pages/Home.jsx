@@ -2,6 +2,7 @@ import { Box, Stack, Input, Text, Button, FormControl, FormErrorMessage } from '
 import { MdDoneOutline } from "react-icons/md"
 
 import { useState, useRef, useEffect, Suspense } from 'react'
+import { useSelector, useDispatch } from "react-redux";
 
 import { Canvas, useFrame, extend } from "@react-three/fiber";
 import { useGLTF } from '@react-three/drei'
@@ -9,15 +10,12 @@ import { useGLTF } from '@react-three/drei'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 
-import { useSelector, useDispatch } from "react-redux";
-
 import { Mount } from "../utilities/Transitions";
 
 import quicksand from '../../assets/Quicksand.json';
 
 import {
     setUsername,
-    setEmail,
     setGoodToGo
 } from "../../states/userInfoSlice";
 
@@ -99,7 +97,7 @@ export default function Home() {
     const inputSubmitAction = (e) => {
         e.preventDefault();
 
-        const isInputEmpty = input === ''
+        const isInputEmpty = input === '';
 
         setIsError(isInputEmpty);
 
@@ -122,7 +120,7 @@ export default function Home() {
                 <Mount content={
                     <>
                         <Text className="mt-5 md:mt-0 mb-2 text-5xl">
-                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={<span>Welcome back, <b>{username}</b>.</span>} show={goodToGo} />}
+                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={<span>Welcome Back, <b>{username}</b>.</span>} show={goodToGo} />}
                         </Text>
 
                         {!goodToGo &&
@@ -137,21 +135,23 @@ export default function Home() {
                     I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.
                 </Text>
 
-                <form onSubmit={inputSubmitAction}>
-                    <FormControl isRequired isInvalid={isError}>
-                        <Stack direction={['column', 'row']} spacing={2}>
-                            <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
+                {!goodToGo && 
+                    <form onSubmit={inputSubmitAction}>
+                        <FormControl isRequired isInvalid={isError}>
+                            <Stack direction={['column', 'row']} spacing={2}>
+                                <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
 
-                            <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
-                                <span className="font-bold">Submit</span>
-                            </Button>
-                        </Stack>
+                                <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
+                                    <span className="font-bold">Submit</span>
+                                </Button>
+                            </Stack>
 
-                        {isError && (
-                            <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
-                        )}
-                    </FormControl>
-                </form>
+                            {isError && (
+                                <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
+                            )}
+                        </FormControl>
+                    </form>
+                }
 
                 <Text className="text-xl mb-5 mt-2">
                     View our Zero-tolerant <a href="/" className="text-blue-200 font-bold hover:underline">Privacy Policy</a>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
