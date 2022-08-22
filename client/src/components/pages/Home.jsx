@@ -127,7 +127,7 @@ export default function Home() {
 
                         {!goodToGo &&
                             <Text className="mb-5 text-5xl mt-5 md:mt-0">
-                                If you don't mind me asking, <b>what should I call you?</b>
+                                If you don't mind me asking, <b style={{ color: "#ffbdf4" }}>what should I call you?</b>
                             </Text>
                         }
                     </>
