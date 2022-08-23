@@ -11,7 +11,7 @@ import pickle
 import random
 import codecs
 
-from reddit import Reddit
+from server.reddit import Reddit
 
 '''
 Talk to a Subreddit: An AI Chatbot
@@ -195,95 +195,80 @@ class Train(object):
             
         self.create_model()
 
-    def start_chatting(self):
+    def send_chat(self, inp):
         print("\n\nChatting process has been started!")
+        # Probability of correct response 
+        results = self.model.predict([self.bag_of_words(inp, self.words)])
 
-        while True:
-            inp = input("\n\nYou: ")
-            if inp.lower() == 'quit':
+        # Picking the greatest number from probability
+        results_index = np.argmax(results)
+
+        tag = self.labels[results_index]
+
+        self.use_reddit_comments = False
+
+        for tg in self.data['intents']:
+            if tg['tag'] == tag:
+                responses = tg['responses']
+                print("\n\nBot: " + random.choice(responses))
+                self.use_reddit_comments = False
                 break
+            else:
+                self.use_reddit_comments = True
 
-            # Probability of correct response 
-            results = self.model.predict([self.bag_of_words(inp, self.words)])
+        if self.use_reddit_comments:
+            comment_list = []
 
-            # Picking the greatest number from probability
-            results_index = np.argmax(results)
+            print(f"\n\nThinking about something related to {tag.strip('[').strip(']')}...")
 
-            tag = self.labels[results_index]
+            for key, value in enumerate(self.reddit_posts['Tag'].values()):
+                # Converting the string to list...
+                temp_value = str(value).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
+                temp_tag = str(tag).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
+                temp_tag_synonyms = []
+
+                # Find the synonyms of the tag and also take into account...
+                for temp_single_tag in temp_tag:
+                    for syn in wordnet.synsets(temp_single_tag):
+                        for i in syn.lemmas():
+                            temp_tag_synonyms.append(i.name())
+
+                # To-Do: Add a feature where the program only searches for a snonym if and only if there's no matching word detected in the corresponding list...
+
+                temp_tag += temp_tag_synonyms
+
+                print(temp_tag) if self.debug_mode else None
+                print(temp_value) if self.debug_mode else None
+
+                flag = []
+                res = False
+                
+                # This part of the code is only used when there're more than one word for the tag of each question (x variable)...
+                for t in temp_tag:
+                    print(f"Current t value: {t}") if self.debug_mode else None
+
+                    if t in temp_value:
+                        flag.append(t)
+
+                print(flag) if self.debug_mode else None
+
+                if flag:
+                    res = True
+
+                # Used when the tag only contains one word each...
+                if temp_tag in temp_value or temp_tag == temp_value:
+                    res = True
+
+                print(res) if self.debug_mode else None
+                
+                if res:
+                    print("Matching key found!") if self.debug_mode else None
+
+                    comment_list.append(str(self.reddit_posts['Total Comments']).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")[key])
+            
+            # Print the decoded encoded string of a random selection that has been made amongst closest matches determined by the trained data...
+            return_value = codecs.decode(random.choice(comment_list).replace("\\", "").strip('\"').strip('\'').capitalize(), 'unicode_escape')
 
             self.use_reddit_comments = False
 
-            for tg in self.data['intents']:
-                if tg['tag'] == tag:
-                    responses = tg['responses']
-                    print("\n\nBot: " + random.choice(responses))
-                    self.use_reddit_comments = False
-                    break
-                else:
-                    self.use_reddit_comments = True
-
-            if self.use_reddit_comments:
-                comment_list = []
-
-                print(f"\n\nThinking about something related to {tag.strip('[').strip(']')}...")
-
-                for key, value in enumerate(self.reddit_posts['Tag'].values()):
-                    # Converting the string to list...
-                    temp_value = str(value).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
-                    temp_tag = str(tag).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
-                    temp_tag_synonyms = []
-
-                    # Find the synonyms of the tag and also take into account...
-                    for temp_single_tag in temp_tag:
-                        for syn in wordnet.synsets(temp_single_tag):
-                            for i in syn.lemmas():
-                                temp_tag_synonyms.append(i.name())
-
-                    # To-Do: Add a feature where the program only searches for a snonym if and only if there's no matching word detected in the corresponding list...
-
-                    temp_tag += temp_tag_synonyms
-
-                    print(temp_tag) if self.debug_mode else None
-                    print(temp_value) if self.debug_mode else None
-
-                    flag = []
-                    res = False
-                    
-                    # This part of the code is only used when there're more than one word for the tag of each question (x variable)...
-                    for t in temp_tag:
-                        print(f"Current t value: {t}") if self.debug_mode else None
-
-                        if t in temp_value:
-                            flag.append(t)
-
-                    print(flag) if self.debug_mode else None
-
-                    if flag:
-                        res = True
-
-                    # Used when the tag only contains one word each...
-                    if temp_tag in temp_value or temp_tag == temp_value:
-                        res = True
-
-                    print(res) if self.debug_mode else None
-                    
-                    if res:
-                        print("Matching key found!") if self.debug_mode else None
-
-                        comment_list.append(str(self.reddit_posts['Total Comments']).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")[key])
-
-                # Print the decoded encoded string of a random selection that has been made amongst closest matches determined by the trained data...
-                print("\n\nBot: " + codecs.decode(random.choice(comment_list).replace("\\", "").strip('\"').strip('\'').capitalize(), 'unicode_escape'))
-
-                self.use_reddit_comments = False
-            
-def start_bot(debug_mode):
-    # Entry point...
-    Reddit.download_kw_model()
-    Train.download_nltk()
-    train = Train(debug_mode)
-    train.start_training()
-    train.start_chatting()
-
-start_bot(debug_mode=False)
-
+        return return_value

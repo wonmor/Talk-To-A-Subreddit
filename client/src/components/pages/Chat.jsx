@@ -3,11 +3,13 @@ import { MdDoneOutline } from "react-icons/md";
 
 import { Box, Stack, Text, Input, Button, FormControl } from '@chakra-ui/react';
 
-import socketIOClient from 'socket.io-client';
+import io from 'socket.io-client';
 
-const socket = socketIOClient('/', {
-    transports: ['websocket'],
-    path: '/socket',
+const socket = io("localhost:5000/", {
+    transports: ["websocket"],
+    cors: {
+      origin: "http://localhost:3000/",
+    },
 });
 
 export default function Chat() {
@@ -51,7 +53,7 @@ export default function Chat() {
                     <Stack direction={['column', 'row']} spacing={2}>
                         {renderChat}
 
-                        <Input placeholder='Start chatting with our bot...' value={state.message} onChange={e => onTextChange(e)} marginRight={"10px"} width={"75%"} className="generic-text" />
+                        <Input placeholder='Start chatting with our bot...' onChange={e => onTextChange(e)} marginRight={"10px"} width={"75%"} className="generic-text" />
 
                         <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid'>
                             <span className="font-bold">Submit</span>

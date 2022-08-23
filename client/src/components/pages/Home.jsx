@@ -4,9 +4,12 @@ import { MdDoneOutline } from "react-icons/md";
 
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 import { Canvas, useFrame, extend } from "@react-three/fiber";
 import { useGLTF } from '@react-three/drei'
+
+import axios from 'axios';
 
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
@@ -87,13 +90,40 @@ function LoadingText(props) {
 
 export default function Home() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
-    const [input, setInput] = useState('')
+    const [input, setInput] = useState('');
+    const [condition, setCondition] = useState('failure');
 
     const [show, set] = useState(false);
     const [isError, setIsError] = useState(false);
 
+    const username = useSelector((state) => state.userInfo.username);
+    const goodToGo = useSelector((state) => state.userInfo.goodToGo);
+
     const handleInputChange = (e) => setInput(e.target.value);
+
+    const statusMessage = (condition) => {
+        if (condition === 'success') {
+            return (<span>Welcome Back, <b>{username}</b>.</span>);
+        } else if (condition === 'failure') {
+            return (<span>Welcome Back, <b>{username}</b>.</span>);
+        }
+    };
+
+    const openSocketChannel = (debugMode = false) => {
+        axios.post('/api/connect', {
+            debugMode: debugMode
+        })
+            .then(function () {
+                setCondition('success');
+                dispatch(setGoodToGo(true));
+            })
+            .catch(function () {
+                setCondition('failure');
+                dispatch(setGoodToGo(false));
+            });
+    };
 
     const inputSubmitAction = (e) => {
         e.preventDefault();
@@ -104,12 +134,9 @@ export default function Home() {
 
         if (!isInputEmpty) {
             dispatch(setUsername(input));
-            dispatch(setGoodToGo(true));
+            openSocketChannel(false);
         }
     };
-
-    const username = useSelector((state) => state.userInfo.username);
-    const goodToGo = useSelector((state) => state.userInfo.goodToGo);
 
     useEffect(() => {
         set(true);
@@ -121,7 +148,7 @@ export default function Home() {
                 <Mount content={
                     <>
                         <Text className="mt-5 md:mt-0 mb-2 text-5xl">
-                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={<span>Welcome Back, <b>{username}</b>.</span>} show={goodToGo} />}
+                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(condition)} show={goodToGo} />}
                         </Text>
 
                         {!goodToGo &&
@@ -136,7 +163,7 @@ export default function Home() {
                     I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.
                 </Text>
 
-                {!goodToGo && 
+                {!goodToGo ?
                     <form onSubmit={inputSubmitAction}>
                         <FormControl isRequired isInvalid={isError}>
                             <Stack direction={['column', 'row']} spacing={2}>
@@ -152,9 +179,11 @@ export default function Home() {
                             )}
                         </FormControl>
                     </form>
-                }
+                    : <Button width='min-content' colorScheme='gray' variant='outline' onClick={() => {navigate('/chat')}}>
+                        <span>Start <b>Chatting</b></span>
+                    </Button>}
 
-                <Text className="text-xl mb-5 mt-2">
+                <Text className="text-xl mb-5 mt-5">
                     View our Zero-tolerant <a href="/" className="text-blue-200 font-bold hover:underline">Privacy Policy</a>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
                 </Text>
             </Box>

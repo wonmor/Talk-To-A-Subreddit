@@ -1,7 +1,7 @@
 import json
 import os
 
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request, current_app, jsonify
 
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit, join_room
@@ -10,7 +10,9 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
 from server.extensions import multipart_download_boto3
+
 from server.train import *
+from server.reddit import *
 
 from . import socketio
 
@@ -35,23 +37,6 @@ CORS(bp, resources={r'/api/*': {'origins': '*'}})
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-@socketio.on('message')
-def chat(param):
-    '''
-    When a user joins the room, they are added to the room's list of users
-    
-    Parameters
-    ----------
-    message : dict
-        A dictionary containing the room name and the user's name
-
-    Returns
-    -------
-    None
-    '''
-    start_bot()
-    emit('message', ({'Bot', param}))
-
 @socketio.on_error_default
 def default_error_handler(e):
     '''
@@ -68,6 +53,22 @@ def default_error_handler(e):
     '''
     print("Error: {}".format(e))
     socketio.stop()
+
+@socketio.on('message')
+def chat(param):
+    '''
+    When a user joins the room, they are added to the room's list of users
+    
+    Parameters
+    ----------
+    message : dict
+        A dictionary containing the room name and the user's name
+
+    Returns
+    -------
+    None
+    '''
+    emit('reply', ({'Bot', train.send_chat(param)}))
 
 # For React Router Redirection Purposes...
 @bp.app_errorhandler(404)   
@@ -106,109 +107,6 @@ def serve():
     '''
     return bp.send_static_file('index.html')
 
-@bp.route('/api/atom/<name>', methods=['GET'])
-@limiter.limit("5 per minute")
-@cross_origin()
-def compute_atom(name):
-    '''
-    When API call is made, this function executes
-    the plot_hydrogen method which computes the
-    electron density data for hydrogen atom.
-    Not only that, it also automatically saves all the data
-    on the Amazon S3 server.
-    
-    Parameters
-    ----------
-    name: String
-        Contains the name of the element
-
-    Returns
-    -------
-    JSON Object
-        A JSONified dictionary that contains
-        the electron density and coordinate data
-    '''
-    pass
-
-@bp.route('/api/molecule/<name>', methods=['GET'])
-@limiter.limit("5 per minute")
-@cross_origin()
-def compute_molecule(name):
-    '''
-    When API call is made, this function executes
-    the plot_hydrogen method which computes the
-    electron density data for hydrogen atom.
-    Not only that, it also automatically saves all the data
-    on the Amazon S3 server.
-    
-    Parameters
-    ----------
-    name: String
-        Contains the name of the element
-
-    Returns
-    -------
-    JSON Object
-        A JSONified dictionary that contains
-        the electron density and coordinate data
-    '''
-    
-    pass
-
-@bp.route('/api/load/<name>', methods=['GET'])
-@limiter.exempt
-@cross_origin()
-def load_from_s3(name):
-    '''
-    When API call is made, this function loads
-    the JSON data from the Amazon S3 server
-    
-    Parameters
-    ----------
-    name: String
-        Contains the name of the element
-
-    Returns
-    -------
-    JSON Object
-        A JSONified dictionary that contains
-        the electron density and coordinate data
-    '''
-    output = os.path.join(PROJECT_ROOT, f'client/src/assets/{name}.json')
-
-    multipart_download_boto3(name, output)
-    
-    with open(output, 'r') as f:
-        data = json.load(f)
-        return data
-
-@bp.route('/api/loadSPH/<name>', methods=['GET'])
-@limiter.exempt
-@cross_origin()
-def loadSPH_from_s3(name):
-    '''
-    When API call is made, this function loads
-    the JSON data from the Amazon S3 server
-    
-    Parameters
-    ----------
-    name: String
-        Contains the name of the element
-
-    Returns
-    -------
-    JSON Object
-        A JSONified dictionary that contains
-        the electron density and coordinate data
-    '''
-    output = os.path.join(PROJECT_ROOT, f'client/src/assets/SPH_{name}.json')
-
-    multipart_download_boto3("SPH_" + name, output)
-    
-    with open(output, 'r') as f:
-        data = json.load(f)
-        return data
-
 @bp.route('/api/connect', methods=['POST'])
 @limiter.exempt
 @cross_origin()
@@ -224,7 +122,19 @@ def connect_to_socket():
     -------
     None
     '''
-    socketio.run(current_app, host="0.0.0.0", port=9000)
+    debug_mode = request.form.get('debugMode')
+
+    Reddit.download_kw_model()
+    Train.download_nltk()
+
+    global train
+    train = Train(debug_mode=debug_mode)
+
+    train.start_training()
+
+    socketio.run(current_app, debug=True, port=5000)
+
+    return jsonify("Successfully connected to the service!");
 
 '''
 ----------------------------------------------------------------

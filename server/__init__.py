@@ -13,8 +13,6 @@ DEVELOPED AND DESIGNED BY JOHN SEONG
 ----------------------------------------------------------------
 '''
 
-socketio = SocketIO()
-
 def create_app():
     '''
     Initializes the Flask REST API that handles most of the mathematical operations
@@ -28,6 +26,9 @@ def create_app():
     None
     '''
     app = Flask(__name__, static_folder='../client/build', static_url_path='/')
+
+    global socketio
+    socketio = SocketIO(app, cors_allowed_origins="*")
     
     from . import api
 
@@ -37,7 +38,6 @@ def create_app():
 
     app.register_blueprint(api.bp)
     
-    global socketio
     socketio.init_app(app)
     
     return app

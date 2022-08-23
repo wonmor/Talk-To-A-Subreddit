@@ -8,14 +8,4 @@ module.exports = function(app) {
             changeOrigin: true,
         })
     );
-
-    app.use(
-        '/socket',
-        createProxyMiddleware({
-            target: 'http://localhost:5000',
-            changeOrigin: true,
-            ws: true, // enable websocket proxy
-            logLevel: 'debug',
-        })
-    );
 };
