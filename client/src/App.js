@@ -17,6 +17,11 @@ const Chat = React.lazy(() => import('./components/pages/Chat'));
 ██╔══██╗██║░░██║██║░░░██║░░░██║░░░██╔══╝░░██╔══██╗░╚═══██╗
 ██║░░██║╚█████╔╝╚██████╔╝░░░██║░░░███████╗██║░░██║██████╔╝
 ╚═╝░░╚═╝░╚════╝░░╚═════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝╚═════╝░
+
+TIPS & TRICKS
+
+1. BEST WAY TO CONDUCT CODE SPLITTING DUE TO MASSIVE JS SIZE:
+https://www.velotio.com/engineering-blog/optimize-react-app-performance-by-code-splitting
 */
 
 export default function App() {
