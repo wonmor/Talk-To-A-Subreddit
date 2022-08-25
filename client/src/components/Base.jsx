@@ -1,5 +1,6 @@
 import './Base.css';
 
+import { Suspense } from 'react';
 import { useNavigate } from "react-router-dom";
 import { FaGithub, FaLinkedin } from 'react-icons/fa'
 
@@ -146,7 +147,9 @@ export default function Base(props) {
           navigate('/');
         }} marginBottom="20px" display={{ md: 'none' }} />
         {/* Main Content goes here... */}
-        <props.content />
+        <Suspense>
+          <props.content />
+        </Suspense>
         <Footer />
       </Box>
     </Box>

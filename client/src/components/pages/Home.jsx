@@ -107,7 +107,7 @@ export default function Home() {
         if (condition === 'success') {
             return (<span>Welcome Back, <b>{username}</b>.</span>);
         } else if (condition === 'failure') {
-            return (<span>Welcome Back, <b>{username}</b>.</span>);
+            return (<span>Connection Error Occured!</span>);
         }
     };
 
@@ -115,10 +115,10 @@ export default function Home() {
         axios.post('/api/connect', {
             debugMode: debugMode
         })
-            .then(function () {
-                setCondition('success');
-                dispatch(setGoodToGo(true));
-            })
+            .then(response =>
+                console.log(response.json())
+           
+            )
             .catch(function () {
                 setCondition('failure');
                 dispatch(setGoodToGo(false));

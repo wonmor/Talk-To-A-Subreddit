@@ -107,7 +107,7 @@ def serve():
     '''
     return bp.send_static_file('index.html')
 
-@bp.route('/api/connect', methods=['POST'])
+@bp.route('/api/connect', methods=['GET', 'POST'])
 @limiter.exempt
 @cross_origin()
 def connect_to_socket():
@@ -132,9 +132,7 @@ def connect_to_socket():
 
     train.start_training()
 
-    socketio.run(current_app, debug=True, port=5000)
-
-    return jsonify("Successfully connected to the service!");
+    return jsonify({"result": "success"});
 
 '''
 ----------------------------------------------------------------

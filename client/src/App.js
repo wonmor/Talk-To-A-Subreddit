@@ -6,9 +6,9 @@ import './App.css';
 
 import Base from './components/Base';
 
-import NotFound from './components/pages/NotFound';
-import Home from './components/pages/Home';
-import Chat from './components/pages/Chat';
+const NotFound = React.lazy(() => import('./components/pages/NotFound'));
+const Home = React.lazy(() => import('./components/pages/Home'));
+const Chat = React.lazy(() => import('./components/pages/Chat'));
 
 /*
 ██████╗░░█████╗░██╗░░░██╗████████╗███████╗██████╗░░██████╗
