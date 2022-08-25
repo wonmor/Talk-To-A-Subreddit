@@ -105,9 +105,19 @@ export default function Home() {
 
     const statusMessage = (condition) => {
         if (condition === 'success') {
-            return (<span>Welcome Back, <b>{username}</b>.</span>);
+            return (
+                <>
+                    <Text className="mt-5 md:mt-0 mb-2 text-5xl">
+                        Welcome Back, <b>{username}</b>.
+                    </Text>
+
+                    <Text className="mb-5 text-5xl mt-5 md:mt-0">
+                        Choose the <b style={{ color: "#ffbdf4" }}>subreddit</b> bot that you would like to talk to.
+                    </Text>
+                </>
+            );
         } else if (condition === 'failure') {
-            return (<span>Connection Error Occured!</span>);
+            return (<span>Sorry, An <b>Error</b> Occured!</span>);
         }
     };
 
@@ -115,10 +125,10 @@ export default function Home() {
         axios.post('/api/connect', {
             debugMode: debugMode
         })
-            .then(response =>
-                console.log(response.json())
-           
-            )
+            .then(function () {
+                setCondition('success');
+                dispatch(setGoodToGo(true));
+            })
             .catch(function () {
                 setCondition('failure');
                 dispatch(setGoodToGo(false));
@@ -180,7 +190,7 @@ export default function Home() {
                         </FormControl>
                     </form>
                     : <Button width='min-content' colorScheme='gray' variant='outline' onClick={() => {navigate('/chat')}}>
-                        <span>Start <b>Chatting</b></span>
+                        <span>r/<b>Aspegers</b></span>
                     </Button>}
 
                 <Text className="text-xl mb-5 mt-5">
