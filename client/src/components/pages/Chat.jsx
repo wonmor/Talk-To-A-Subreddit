@@ -56,7 +56,7 @@ export default function Chat() {
                         <Input placeholder='Start chatting with our bot...' onChange={e => onTextChange(e)} marginRight={"10px"} width={"75%"} className="generic-text" />
 
                         <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid'>
-                            <span className="font-bold">Submit</span>
+                            <span className="font-bold">Send</span>
                         </Button>
                     </Stack>
                 </FormControl>

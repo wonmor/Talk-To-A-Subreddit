@@ -106,15 +106,15 @@ export default function Home() {
     const statusMessage = (condition) => {
         if (condition === 'success') {
             return (
-                <>
-                    <Text className="mt-5 md:mt-0 mb-2 text-5xl">
+                <div className="flex flex-col">
+                    <span className="mt-5 md:mt-0 mb-2 text-5xl">
                         Welcome Back, <b>{username}</b>.
-                    </Text>
+                    </span>
 
-                    <Text className="mb-5 text-5xl mt-5 md:mt-0">
+                    <span className="mb-5 text-5xl mt-5 md:mt-0">
                         Choose the <b style={{ color: "#ffbdf4" }}>subreddit</b> bot that you would like to talk to.
-                    </Text>
-                </>
+                    </span>
+                </div>
             );
         } else if (condition === 'failure') {
             return (<span>Sorry, An <b>Error</b> Occured!</span>);
