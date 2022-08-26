@@ -1,6 +1,5 @@
 from flask import Flask
-from flask_cors import CORS
-from flask_socketio import SocketIO, emit, join_room
+from flask_socketio import SocketIO
 
 from dotenv import load_dotenv
 
@@ -12,6 +11,8 @@ A RESTful API THAT POWERS THE AI CHATBOT "TALK TO A SUBREDDIT"
 DEVELOPED AND DESIGNED BY JOHN SEONG
 ----------------------------------------------------------------
 '''
+
+socketio = SocketIO()
 
 def create_app():
     '''
@@ -26,9 +27,6 @@ def create_app():
     None
     '''
     app = Flask(__name__, static_folder='../client/build', static_url_path='/')
-
-    global socketio
-    socketio = SocketIO(app, cors_allowed_origins="*")
     
     from . import api
 
