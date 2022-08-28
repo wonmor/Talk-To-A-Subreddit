@@ -112,12 +112,12 @@ export default function Home() {
         if (goodToGo) {
             return (
                 <div className="flex flex-col">
-                    <span className="mt-5 md:mt-0 mb-2 text-5xl">
+                    <span className="mt-5 md:mt-0 mb-5 text-3xl">
                         Welcome Back, <b>{username}</b>.
                     </span>
 
                     <span className="mb-5 text-5xl mt-5 md:mt-0">
-                        Choose the <b style={{ color: "#ffbdf4" }}>subreddit</b> bot that you would like to talk to.
+                        Choose a <b style={{ color: "#ffbdf4" }}>Subreddit</b> Bot.
                     </span>
                 </div>
             );
@@ -201,7 +201,7 @@ export default function Home() {
                             )}
                         </FormControl>
                     </form>
-                    : <Button width='min-content' colorScheme='gray' variant='outline' onClick={() => {navigate('/chat')}}>
+                    : <Button width='min-content' colorScheme='orange' variant='outline' onClick={() => {navigate('/chat')}}>
                         <span>r/<b>Aspegers</b></span>
                     </Button>}
 

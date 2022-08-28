@@ -21,7 +21,7 @@ import {
 
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 
-const Links = ['API', 'Docs', 'About'];
+const Links = ['Docs', 'API', 'About'];
 
 function NavLink({ children }) {
   const navigate = useNavigate();
