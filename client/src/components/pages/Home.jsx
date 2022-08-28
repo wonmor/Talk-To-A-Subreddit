@@ -22,7 +22,8 @@ import { io } from 'socket.io-client';
 
 import {
     setUsername,
-    setGoodToGo
+    setGoodToGo,
+    setIsSocketChannelOpen
 } from "../../states/userInfoSlice";
 
 export let socket;
@@ -97,18 +98,18 @@ export default function Home() {
     const navigate = useNavigate();
 
     const [input, setInput] = useState('');
-    const [condition, setCondition] = useState('failure');
 
     const [show, set] = useState(false);
     const [isError, setIsError] = useState(false);
-
+    
     const username = useSelector((state) => state.userInfo.username);
     const goodToGo = useSelector((state) => state.userInfo.goodToGo);
+    const isSocketChannelOpen = useSelector((state) => state.userInfo.isSocketChannelOpen);
 
     const handleInputChange = (e) => setInput(e.target.value);
 
-    const statusMessage = (condition) => {
-        if (condition === 'success') {
+    const statusMessage = (goodToGo) => {
+        if (goodToGo) {
             return (
                 <div className="flex flex-col">
                     <span className="mt-5 md:mt-0 mb-2 text-5xl">
@@ -120,7 +121,7 @@ export default function Home() {
                     </span>
                 </div>
             );
-        } else if (condition === 'failure') {
+        } else {
             return (<span>Sorry, An <b>Error</b> Occured!</span>);
         }
     };
@@ -128,18 +129,17 @@ export default function Home() {
     const openSocketChannel = (debugMode = false) => {
         axios.post('/api/connect')
             .then(function () {
-                setCondition('success');
                 dispatch(setGoodToGo(true));
+                dispatch(setIsSocketChannelOpen(true));
 
-                socket = io("localhost:5000/", {
+                socket = io("0.0.0.0:5000/", {
                     transports: ["websocket"],
                     cors: {
-                      origin: "http://localhost:3000/",
+                      origin: "http://0.0.0.0:3000/",
                     },
                 });
             })
             .catch(function () {
-                setCondition('failure');
                 dispatch(setGoodToGo(false));
             });
     };
@@ -153,7 +153,10 @@ export default function Home() {
 
         if (!isInputEmpty) {
             dispatch(setUsername(input));
-            openSocketChannel(false);
+            
+            if (!isSocketChannelOpen) {
+                openSocketChannel();
+            }
         }
     };
 
@@ -167,7 +170,7 @@ export default function Home() {
                 <Mount content={
                     <>
                         <Text className="mt-5 md:mt-0 mb-2 text-5xl">
-                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(condition)} show={goodToGo} />}
+                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(goodToGo)} show={goodToGo} />}
                         </Text>
 
                         {!goodToGo &&

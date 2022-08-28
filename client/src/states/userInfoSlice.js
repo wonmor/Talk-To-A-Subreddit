@@ -5,11 +5,13 @@ export const userInfoSlice = createSlice({
     initialState: {
         username: "Steve",
         email: "stevemakinson@gmail.com",
-        goodToGo: false
+        goodToGo: false,
+        isSocketChannelOpen: false,
+        chatHistory: ""
     },
     reducers: {
         setUsername: (state, action) => {
-            if (state.name !== action.payload) {
+            if (state.username !== action.payload) {
                 return {...state, username: action.payload };
             }
         },
@@ -22,10 +24,20 @@ export const userInfoSlice = createSlice({
             if (state.goodToGo !== action.payload) {
                 return {...state, goodToGo: action.payload };
             }
+        },
+        setIsSocketChannelOpen: (state, action) => {
+            if (state.isSocketChannelOpen !== action.payload) {
+                return {...state, isSocketChannelOpen: action.payload };
+            }
+        },
+        setChatHistory: (state, action) => {
+            if (state.setChatHistory !== action.payload) {
+                return {...state, chatHistory: action.payload };
+            }
         }
     }
 })
 
-export const { setUsername, setEmail, setGoodToGo } = userInfoSlice.actions;
+export const { setUsername, setEmail, setGoodToGo, setIsSocketChannelOpen, setChatHistory } = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;

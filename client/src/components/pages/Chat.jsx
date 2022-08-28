@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react';
 import { MdDoneOutline } from "react-icons/md";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import { Box, Stack, Text, Input, Button, FormControl } from '@chakra-ui/react';
 
 import { socket } from './Home';
 
+import { setChatHistory } from '../../states/userInfoSlice';
+
 export default function Chat() {
+    const dispatch = useDispatch();
+
     const username = useSelector((state) => state.userInfo.username);
+    const chatHistory = useSelector((state) => state.userInfo.chatHistory);
 
     const [state, setState] = useState({message: '', name: username});
-    const [reply, setReply] = useState([]);
 
     useEffect(() => {
         socket.on('reply', ({name, message}) => {
             console.log(message)
-            setReply([...reply, {name, message}])
+            dispatch(setChatHistory([...chatHistory, {name, message}]));
         });
-    }, [reply]);
+    }, [chatHistory, dispatch]);
 
     const onTextChange = e => {
         setState({message: e.target.value, name: username});
@@ -26,26 +30,29 @@ export default function Chat() {
     
     const onMessageSubmit = (e) => {
         e.preventDefault();
-        console.log(state);
+
         const {name, message} = state;
-        console.log({name, message});
         
         socket.emit('message', {name, message});
+
         setState({message : '', name});
+        dispatch(setChatHistory([...chatHistory, {name, message}]));
     };
 
     const ChatList = () => {
-        return reply.map(({name, message}, index) => (
-            <span key={index}>
-                <h3><b>{name}</b>: <span>{message}</span></h3>
-            </span>
-        ));
+        if (chatHistory) {
+            return chatHistory.map(({name, message}, index) => (
+                <span key={index}>
+                    <h3><b>{name}</b>: <span className={message.includes('Thinking') && 'italic'}>{message}</span></h3>
+                </span>
+            ));
+        }
     }; 
 
     return (
         <Box>
             <Text className="text-4xl mb-5">
-                This is the <b>chat</b> page. Website is currently under construction.
+                Bonjour, <b>{username}</b>. How was your day?
             </Text>
 
             <form onSubmit={onMessageSubmit}>

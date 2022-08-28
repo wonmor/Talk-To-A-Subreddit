@@ -211,7 +211,7 @@ class Train(object):
             for tg in self.data['intents']:
                 if tg['tag'] == tag:
                     responses = tg['responses']
-                    return_value = "Bot: " + random.choice(responses)
+                    return_value = random.choice(responses)
                     self.use_reddit_comments = False
                     break
                 else:
@@ -226,6 +226,7 @@ class Train(object):
                     # Converting the string to list...
                     temp_value = str(value).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
                     temp_tag = str(tag).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
+                    
                     temp_tag_synonyms = []
 
                     # Find the synonyms of the tag and also take into account...
