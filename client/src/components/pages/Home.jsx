@@ -93,6 +93,27 @@ function LoadingText(props) {
     );
 }
 
+export function Showcase() {
+    return (
+        <Box style={{ width: "fit-parent", height: "85vh" }}>
+            <Canvas className="border-2 border-gray-600 rounded" style={{ borderColor: "#bdefff" }} camera={{ fov: 15, position: [-25, 0, 0] }}>
+                <mesh rotation={[-8, 0, 0]}>
+                    <GroundPlane />
+                    <BackDrop />
+                </mesh>
+
+                <Suspense fallback={(<LoadingText position={[0, 0, -1]} scale={0.4} />)}>
+                    <Character />
+                </Suspense>
+
+                <ambientLight color="#bdefff" intensity={0.25} castShadow />
+                <spotLight color="#bdefff" position={[10, 10, 10]} angle={0.15} penumbra={1} castShadow />
+                <pointLight color="#ffbdf4" position={[-10, -10, -10]} castShadow />
+            </Canvas>
+        </Box>
+    );
+}
+
 export default function Home() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -101,7 +122,7 @@ export default function Home() {
 
     const [show, set] = useState(false);
     const [isError, setIsError] = useState(false);
-    
+
     const username = useSelector((state) => state.userInfo.username);
     const goodToGo = useSelector((state) => state.userInfo.goodToGo);
     const isSocketChannelOpen = useSelector((state) => state.userInfo.isSocketChannelOpen);
@@ -135,7 +156,7 @@ export default function Home() {
                 socket = io("0.0.0.0:5000/", {
                     transports: ["websocket"],
                     cors: {
-                      origin: "http://0.0.0.0:3000/",
+                        origin: "http://0.0.0.0:3000/",
                     },
                 });
             })
@@ -153,7 +174,7 @@ export default function Home() {
 
         if (!isInputEmpty) {
             dispatch(setUsername(input));
-            
+
             if (!isSocketChannelOpen) {
                 openSocketChannel();
             }
@@ -201,7 +222,7 @@ export default function Home() {
                             )}
                         </FormControl>
                     </form>
-                    : <Button width='min-content' colorScheme='orange' variant='outline' onClick={() => {navigate('/chat')}}>
+                    : <Button width='min-content' colorScheme='orange' variant='outline' onClick={() => { navigate('/chat') }}>
                         <span>r/<b>Aspegers</b></span>
                     </Button>}
 
@@ -210,22 +231,7 @@ export default function Home() {
                 </Text>
             </Box>
 
-            <Box style={{ width: "fit-parent", height: "85vh" }}>
-                <Canvas className="border-2 border-gray-600 rounded" style={{ borderColor: "#bdefff" }} camera={{ fov: 15, position: [-25, 0, 0] }}>
-                    <mesh rotation={[-8, 0, 0]}>
-                        <GroundPlane />
-                        <BackDrop />
-                    </mesh>
-
-                    <Suspense fallback={(<LoadingText position={[0, 0, -1]} scale={0.4} />)}>
-                        <Character />
-                    </Suspense>
-
-                    <ambientLight color="#bdefff" intensity={0.25} castShadow />
-                    <spotLight color="#bdefff" position={[10, 10, 10]} angle={0.15} penumbra={1} castShadow />
-                    <pointLight color="#ffbdf4" position={[-10, -10, -10]} castShadow />
-                </Canvas>
-            </Box>
+            <Showcase />
         </>
     );
 }
