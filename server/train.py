@@ -10,6 +10,7 @@ import json
 import pickle
 import random
 import codecs
+from flask_socketio import emit
 
 from server.reddit import Reddit
 
@@ -221,7 +222,7 @@ class Train(object):
             if self.use_reddit_comments:
                 comment_list = []
 
-                print(f"\n\nThinking about something related to {tag.strip('[').strip(']')}...")
+                emit('thought', list({'Bot', f"\n\nThinking about something related to {tag.strip('[').strip(']')}..."}))
 
                 for key, value in enumerate(self.reddit_posts['Tag'].values()):
                     # Converting the string to list...
@@ -275,4 +276,4 @@ class Train(object):
 
             return return_value
         else:
-            return "NO_ENTRY"
+            return "Please enter a valid text!"
