@@ -111,12 +111,18 @@ export default function Base(props) {
 
           <Flex alignItems={'center'}>
             <Button
+              className="drop-shadow-xl"
               variant={'solid'}
               colorScheme={'cyan'}
               size={'sm'}
+              as={'a'}
+              href={'https://patreon.com/user?0=u&1=%3D&2=7&3=3&4=6&5=9&6=2&7=2&8=7&9=9&utm_medium=clipboard_copy&utm_source=copyLink&utm_campaign=creatorshare_creator'}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
               leftIcon={<FaMoneyBillWave />}>
               <span className='font-bold'>
-                Donate
+                Patreon
               </span>
             </Button>
           </Flex>

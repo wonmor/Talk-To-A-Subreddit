@@ -212,7 +212,7 @@ export default function Home() {
                             <Stack direction={['column', 'row']} spacing={2}>
                                 <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
 
-                                <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
+                                <Button className="drop-shadow-xl" width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
                                     <span className="font-bold">Submit</span>
                                 </Button>
                             </Stack>
