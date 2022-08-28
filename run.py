@@ -3,7 +3,6 @@ from server import create_app, socketio, api
 import os
 
 app = create_app()
-socketio.init_app(app)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000)) 
