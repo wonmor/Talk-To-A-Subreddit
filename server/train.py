@@ -211,7 +211,7 @@ class Train(object):
             for tg in self.data['intents']:
                 if tg['tag'] == tag:
                     responses = tg['responses']
-                    return_value = "\n\nBot: " + random.choice(responses)
+                    return_value = "Bot: " + random.choice(responses)
                     self.use_reddit_comments = False
                     break
                 else:
@@ -220,8 +220,7 @@ class Train(object):
             if self.use_reddit_comments:
                 comment_list = []
 
-                emit('thought', list({'Bot', f"\n\nThinking about something related to {tag.strip('[').strip(']')}..."}))
-                print(list({'Bot', f"\n\nThinking about something related to {tag.strip('[').strip(']')}..."}))
+                emit('reply', ({'name': 'Bot', 'message': f"Thinking about something related to {tag.strip('[').strip(']')}..."}))
 
                 for key, value in enumerate(self.reddit_posts['Tag'].values()):
                     # Converting the string to list...

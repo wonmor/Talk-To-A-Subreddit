@@ -34,11 +34,11 @@ export default function Chat() {
         setState({message : '', name});
     };
 
-    const renderChat = () => {
+    const ChatList = () => {
         return reply.map(({name, message}, index) => (
-            <div key={index}>
-                <h3>{name}:<span>{message}</span></h3>
-            </div>
+            <span key={index}>
+                <h3><b>{name}</b>: <span>{message}</span></h3>
+            </span>
         ));
     }; 
 
@@ -58,7 +58,7 @@ export default function Chat() {
                         </Button>
                     </Stack>
 
-                    {renderChat}
+                    <ChatList />
                 </FormControl>
             </form>
         </Box>
