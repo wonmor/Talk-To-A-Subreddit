@@ -197,8 +197,6 @@ class Train(object):
         self.create_model()
 
     def send_chat(self, inp):
-        print("\n\nChatting process has been started!")
-
         if inp:
             # Probability of correct response 
             results = self.model.predict([self.bag_of_words(inp, self.words)])
@@ -213,7 +211,7 @@ class Train(object):
             for tg in self.data['intents']:
                 if tg['tag'] == tag:
                     responses = tg['responses']
-                    print("\n\nBot: " + random.choice(responses))
+                    return_value = "\n\nBot: " + random.choice(responses)
                     self.use_reddit_comments = False
                     break
                 else:
@@ -223,6 +221,7 @@ class Train(object):
                 comment_list = []
 
                 emit('thought', list({'Bot', f"\n\nThinking about something related to {tag.strip('[').strip(']')}..."}))
+                print(list({'Bot', f"\n\nThinking about something related to {tag.strip('[').strip(']')}..."}))
 
                 for key, value in enumerate(self.reddit_posts['Tag'].values()):
                     # Converting the string to list...
@@ -274,7 +273,6 @@ class Train(object):
 
                 self.use_reddit_comments = False
 
-            print(return_value)
             return return_value
         else:
             return "Please enter a valid text!"

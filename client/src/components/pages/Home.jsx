@@ -126,9 +126,7 @@ export default function Home() {
     };
 
     const openSocketChannel = (debugMode = false) => {
-        axios.post('/api/connect', {
-            debugMode: debugMode
-        })
+        axios.post('/api/connect')
             .then(function () {
                 setCondition('success');
                 dispatch(setGoodToGo(true));

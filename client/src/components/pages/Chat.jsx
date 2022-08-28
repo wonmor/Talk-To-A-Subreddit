@@ -9,31 +9,33 @@ import { socket } from './Home';
 
 export default function Chat() {
     const username = useSelector((state) => state.userInfo.username);
-    
+
     const [state, setState] = useState({message: '', name: username});
-    const [chat, setChat] = useState([]);
+    const [reply, setReply] = useState([]);
 
     useEffect(() => {
-        socket.on('message', ({name, message}) => {
-            setChat([...chat, {name, message}])
+        socket.on('reply', ({name, message}) => {
+            console.log(message)
+            setReply([...reply, {name, message}])
         });
-    }, [chat]);
+    }, [reply]);
 
     const onTextChange = e => {
-        setState({...state,[e.target.name]: e.target.value});
+        setState({message: e.target.value, name: username});
     };
     
     const onMessageSubmit = (e) => {
-        e.preventDefault()
-        console.log(state)
-        const {name, message} = state
+        e.preventDefault();
+        console.log(state);
+        const {name, message} = state;
+        console.log({name, message});
         
-        socket.emit('message', {name, message})
-        setState({message : '', name})
+        socket.emit('message', {name, message});
+        setState({message : '', name});
     };
 
     const renderChat = () => {
-        return chat.map(({name, message}, index) => (
+        return reply.map(({name, message}, index) => (
             <div key={index}>
                 <h3>{name}:<span>{message}</span></h3>
             </div>
@@ -48,15 +50,15 @@ export default function Chat() {
 
             <form onSubmit={onMessageSubmit}>
                 <FormControl isRequired>
-                    <Stack direction={['column', 'row']} spacing={2}>
-                        {renderChat}
-
+                    <Stack className="mb-5" direction={['column', 'row']} spacing={2}>
                         <Input placeholder='Start chatting with our bot...' onChange={e => onTextChange(e)} marginRight={"10px"} width={"75%"} className="generic-text" />
 
                         <Button width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid'>
                             <span className="font-bold">Send</span>
                         </Button>
                     </Stack>
+
+                    {renderChat}
                 </FormControl>
             </form>
         </Box>

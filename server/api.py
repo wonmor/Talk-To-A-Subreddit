@@ -37,6 +37,8 @@ CORS(bp, resources={r'/api/*': {'origins': '*'}})
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+train = Train(debug_mode=False)
+
 @socketio.on_error_default
 def default_error_handler(e):
     '''
@@ -68,8 +70,7 @@ def chat(param):
     -------
     None
     '''
-    print(param)
-    emit('reply', list({'Bot', train.send_chat(str(param))}))
+    emit('reply', ({'name': 'Bot', 'message': train.send_chat(str(param['message']))}))
 
 # For React Router Redirection Purposes...
 @bp.app_errorhandler(404)   
@@ -77,6 +78,9 @@ def chat(param):
 def not_found(e):   
     '''
     This function is used to redirect the user to the React Router page
+
+    CANNOT STOP UNKNOWN SERVER FIX:
+    https://stackoverflow.com/questions/39340650/shut-down-flask-socketio-server
 
     Parameters
     ----------
@@ -124,13 +128,9 @@ def connect():
     -------
     None
     '''
-    debug_mode = request.form.get('debugMode')
 
     Reddit.download_kw_model()
     Train.download_nltk()
-
-    global train
-    train = Train(debug_mode=debug_mode)
 
     train.start_training()
 
