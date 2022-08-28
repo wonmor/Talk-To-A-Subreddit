@@ -278,3 +278,5 @@ Temporary Items
 # For Tensorflow...
 checkpoint
 
+package-lock.json
+
