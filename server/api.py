@@ -68,6 +68,7 @@ def chat(param):
     -------
     None
     '''
+    print(param)
     emit('reply', list({'Bot', train.send_chat(str(param))}))
 
 # For React Router Redirection Purposes...

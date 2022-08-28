@@ -274,6 +274,7 @@ class Train(object):
 
                 self.use_reddit_comments = False
 
+            print(return_value)
             return return_value
         else:
             return "Please enter a valid text!"

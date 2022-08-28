@@ -1,12 +1,16 @@
 import { useEffect, useState } from 'react';
 import { MdDoneOutline } from "react-icons/md";
 
+import { useSelector } from "react-redux";
+
 import { Box, Stack, Text, Input, Button, FormControl } from '@chakra-ui/react';
 
 import { socket } from './Home';
 
 export default function Chat() {
-    const [state, setState] = useState({message: '', name: ''});
+    const username = useSelector((state) => state.userInfo.username);
+    
+    const [state, setState] = useState({message: '', name: username});
     const [chat, setChat] = useState([]);
 
     useEffect(() => {
@@ -21,6 +25,7 @@ export default function Chat() {
     
     const onMessageSubmit = (e) => {
         e.preventDefault()
+        console.log(state)
         const {name, message} = state
         
         socket.emit('message', {name, message})
