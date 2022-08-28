@@ -122,6 +122,7 @@ export default function Home() {
 
     const [show, set] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const username = useSelector((state) => state.userInfo.username);
     const goodToGo = useSelector((state) => state.userInfo.goodToGo);
@@ -148,15 +149,19 @@ export default function Home() {
     };
 
     const openSocketChannel = (debugMode = false) => {
+        setIsLoading(true);
+
         axios.post('/api/connect')
             .then(function () {
                 dispatch(setGoodToGo(true));
                 dispatch(setIsSocketChannelOpen(true));
 
-                socket = io("0.0.0.0:5000/", {
+                setIsLoading(false);
+
+                socket = io("localhost:5000/", {
                     transports: ["websocket"],
                     cors: {
-                        origin: "http://0.0.0.0:3000/",
+                        origin: "http://localhost:3000/",
                     },
                 });
             })
@@ -207,21 +212,25 @@ export default function Home() {
                 </Text>
 
                 {!goodToGo ?
-                    <form onSubmit={inputSubmitAction}>
-                        <FormControl isRequired isInvalid={isError}>
-                            <Stack direction={['column', 'row']} spacing={2}>
-                                <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
+                    <>
+                        {!isLoading ?
+                            <form onSubmit={inputSubmitAction}>
+                                <FormControl isRequired isInvalid={isError}>
+                                    <Stack direction={['column', 'row']} spacing={2}>
+                                        <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
 
-                                <Button className="drop-shadow-xl" width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
-                                    <span className="font-bold">Submit</span>
-                                </Button>
-                            </Stack>
+                                        <Button className="drop-shadow-xl" width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
+                                            <span className="font-bold">Submit</span>
+                                        </Button>
+                                    </Stack>
 
-                            {isError && (
-                                <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
-                            )}
-                        </FormControl>
-                    </form>
+                                    {isError && (
+                                        <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
+                                    )}
+                                </FormControl>
+                            </form>
+                            : <><h1>Loading...</h1></>}
+                    </>
                     : <Button width='min-content' colorScheme='orange' variant='outline' onClick={() => { navigate('/chat') }}>
                         <span>r/<b>Aspegers</b></span>
                     </Button>}
