@@ -133,7 +133,7 @@ export default function Home() {
         if (goodToGo) {
             return (
                 <div className="flex flex-col">
-                    <span className="mt-5 md:mt-0 mb-5 text-3xl">
+                    <span className="mt-5 md:mt-0 mb-5 text-3xl" style={{ color: "#bdefff" }}>
                         Welcome Back, <b>{username}</b>.
                     </span>
 
@@ -227,7 +227,7 @@ export default function Home() {
                     </Button>}
 
                 <Text className="text-xl mb-5 mt-5">
-                    View our Zero-tolerant <a href="/" className="text-blue-200 font-bold hover:underline">Privacy Policy</a>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
+                    View our Zero-tolerant <a href="/" className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</a>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
                 </Text>
             </Box>
 

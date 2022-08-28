@@ -52,7 +52,7 @@ export default function Chat() {
                 <Box className='mb-5'>
                     {chatHistory.map(({ name, message }, index) => (
                         <span key={index}>
-                            <h3><b>{name}</b>: <span className={message.includes('Thinking') && 'italic'} style={{color: message.includes("Thinking") && "#bdefff"}}>{message}</span></h3>
+                            <h3><b>{name}</b>: <span className={message.includes('Thinking') && 'italic'} style={{ color: message.includes("Thinking") && "#bdefff" }}>{message}</span></h3>
                         </span>
                     ))}
                 </Box>
@@ -63,7 +63,7 @@ export default function Chat() {
     return (
         <Box className="border-t-2 border-white md:border-transparent">
             <Mount content={
-                <Text className="text-4xl mb-5">
+                <Text className="text-4xl mb-5 mt-5 md:mt-0">
                     Bonjour, <b>{username}</b>. How was your day?
                 </Text>
             } show={show} />
@@ -71,7 +71,7 @@ export default function Chat() {
             <form onSubmit={onMessageSubmit}>
                 <FormControl isRequired>
                     <Stack className="mb-5" direction={['column', 'row']} spacing={2}>
-                        <Input placeholder='Start chatting with our bot...' onChange={e => onTextChange(e)} marginRight={"10px"} width={"80%"} className="generic-text" />
+                        <Input placeholder='Start chatting with our bot...' value={state['message']} onChange={e => onTextChange(e)} marginRight={"10px"} width={"80%"} className="generic-text" />
 
                         <Button width={"min-content"} leftIcon={<MdSend />} colorScheme='orange' variant='solid'>
                             <span className="font-bold">Send</span>
