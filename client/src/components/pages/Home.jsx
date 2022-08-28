@@ -227,7 +227,7 @@ export default function Home() {
                     </Button>}
 
                 <Text className="text-xl mb-5 mt-5">
-                    View our Zero-tolerant <a href="/" className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</a>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
+                    View our Zero-tolerant <button onClick={() => { navigate('/about') }} className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</button>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
                 </Text>
             </Box>
 

@@ -96,6 +96,7 @@ export default function Base(props) {
 
             <Image className="logo-button" src="logo.svg" onClick={() => {
               navigate('/');
+              onClose();
             }} />
 
             <HStack
@@ -136,6 +137,7 @@ export default function Base(props) {
       <Box p={4}>
         <Image className="logo-button pb-2" src="logo.svg" onClick={() => {
           navigate('/');
+          onClose();
         }} marginBottom="20px" display={{ md: 'none' }} />
         {/* Main Content goes here... */}
         <Suspense>
