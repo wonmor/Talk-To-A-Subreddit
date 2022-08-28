@@ -238,7 +238,7 @@ export default function Home() {
                                     )}
                                 </FormControl>
                             </form>
-                            : <h1 className="text-2xl font-bold italic">Loading...</h1>}
+                            : <h1 className="text-2xl font-bold text-orange-500">Loading...</h1>}
                     </>
                     : <Button width='min-content' colorScheme='orange' variant='outline' onClick={() => { navigate('/chat') }}>
                         <span>r/<b>Aspegers</b></span>
