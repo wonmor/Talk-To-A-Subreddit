@@ -151,6 +151,15 @@ export default function Home() {
     const openSocketChannel = (debugMode = false) => {
         setIsLoading(true);
 
+        let url = ""
+
+        if (process.env.NODE_EnV === "development") {
+            url = "http://localhost"
+
+        } else if (process.env.NODE_EnV === "production") {
+            url = "https://talkreddit.apps.johnseong.info"
+        }
+
         axios.post('/api/connect')
             .then(function () {
                 dispatch(setGoodToGo(true));
@@ -158,10 +167,10 @@ export default function Home() {
 
                 setIsLoading(false);
 
-                socket = io("localhost:5000/", {
+                socket = io(url + ":5000/", {
                     transports: ["websocket"],
                     cors: {
-                        origin: "http://localhost:3000/",
+                        origin: url + ":3000/",
                     },
                 });
             })
@@ -229,7 +238,7 @@ export default function Home() {
                                     )}
                                 </FormControl>
                             </form>
-                            : <><h1>Loading...</h1></>}
+                            : <h1 className="text-2xl font-bold italic">Loading...</h1>}
                     </>
                     : <Button width='min-content' colorScheme='orange' variant='outline' onClick={() => { navigate('/chat') }}>
                         <span>r/<b>Aspegers</b></span>
