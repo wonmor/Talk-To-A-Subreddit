@@ -10,6 +10,9 @@ import os
 A RESTful API THAT POWERS THE AI CHATBOT "TALK TO A SUBREDDIT"
 DEVELOPED AND DESIGNED BY JOHN SEONG
 ----------------------------------------------------------------
+
+HOW TO DEPLOY AN APP ON DIGITALOCEAN USING CAPROVER:
+https://levelup.gitconnected.com/using-docker-and-digitalocean-to-host-a-simple-flask-app-5d78c9f50ba4
 '''
 
 socketio = SocketIO()
