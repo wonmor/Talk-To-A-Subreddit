@@ -1,11 +1,15 @@
-from server import create_app, socketio
+from server import create_app, socketio, api
 
 import os
 
 app = create_app()
+socketio.init_app(app)
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000)) 
     socketio.run(app, host="0.0.0.0", debug=True, port=port)
-
-# https://strapi.io/blog/how-to-create-a-chat-bot-assistant-using-next-js-tailwind-css-and-strapi?utm_source=reddit&utm_medium=nextjs&utm_campaign=blog
+    
+'''
+HOW TO FIX FLASK-SOCKETIO NOT WORKING ERROR:
+https://stackoverflow.com/questions/65293084/flask-socketio-server-side-not-receivng-events
+'''

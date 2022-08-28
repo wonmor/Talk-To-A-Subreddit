@@ -15,7 +15,7 @@ HOW TO DEPLOY AN APP ON DIGITALOCEAN USING CAPROVER:
 https://levelup.gitconnected.com/using-docker-and-digitalocean-to-host-a-simple-flask-app-5d78c9f50ba4
 '''
 
-socketio = SocketIO()
+socketio = SocketIO(cors_allowed_origins="*")
 
 def create_app():
     '''
@@ -38,8 +38,6 @@ def create_app():
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
     app.register_blueprint(api.bp)
-    
-    socketio.init_app(app)
     
     return app
 

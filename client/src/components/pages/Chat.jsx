@@ -3,14 +3,7 @@ import { MdDoneOutline } from "react-icons/md";
 
 import { Box, Stack, Text, Input, Button, FormControl } from '@chakra-ui/react';
 
-import io from 'socket.io-client';
-
-const socket = io("localhost:5000/", {
-    transports: ["websocket"],
-    cors: {
-      origin: "http://localhost:3000/",
-    },
-});
+import { socket } from './Home';
 
 export default function Chat() {
     const [state, setState] = useState({message: '', name: ''});

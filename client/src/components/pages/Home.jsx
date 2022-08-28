@@ -18,10 +18,14 @@ import { Mount } from "../utilities/Transitions";
 
 import quicksand from '../../assets/Quicksand.json';
 
+import { io } from 'socket.io-client';
+
 import {
     setUsername,
     setGoodToGo
 } from "../../states/userInfoSlice";
+
+export let socket;
 
 const GroundPlane = () => {
     return (
@@ -128,6 +132,13 @@ export default function Home() {
             .then(function () {
                 setCondition('success');
                 dispatch(setGoodToGo(true));
+
+                socket = io("localhost:5000/", {
+                    transports: ["websocket"],
+                    cors: {
+                      origin: "http://localhost:3000/",
+                    },
+                });
             })
             .catch(function () {
                 setCondition('failure');

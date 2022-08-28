@@ -110,9 +110,10 @@ def serve():
 @bp.route('/api/connect', methods=['GET', 'POST'])
 @limiter.exempt
 @cross_origin()
-def connect_to_socket():
+def connect():
     '''
-    When API call is made, this function opens the SocketIO connection
+    When API call is made, this function initializes
+    the chat session with the bot
     
     Parameters
     ----------
