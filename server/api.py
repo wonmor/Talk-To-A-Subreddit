@@ -140,8 +140,6 @@ def connect():
 @limiter.limit("1/second", override_defaults=False)
 @cross_origin()
 def set_subreddit():
-    print(request.json['subRedditName'])
-    
     train.set_subreddit_name(request.json['subRedditName'])
 
     return jsonify({"result": "success"})

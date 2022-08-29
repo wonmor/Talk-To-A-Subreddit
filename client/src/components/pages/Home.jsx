@@ -23,7 +23,6 @@ import { io } from 'socket.io-client';
 import {
     setUsername,
     setGoodToGo,
-    setIsSocketChannelOpen,
     setBuildHistory,
     setSelectedSubRedditName
 } from "../../states/userInfoSlice";
@@ -128,7 +127,6 @@ export default function Home() {
 
     const username = useSelector((state) => state.userInfo.username);
     const goodToGo = useSelector((state) => state.userInfo.goodToGo);
-    const isSocketChannelOpen = useSelector((state) => state.userInfo.isSocketChannelOpen);
     const buildHistory = useSelector((state) => state.userInfo.buildHistory);
 
     const handleInputChange = (e) => setInput(e.target.value);
@@ -158,7 +156,6 @@ export default function Home() {
 
         await axios.post('/api/connect')
             .then(function () {
-                dispatch(setIsSocketChannelOpen(true));
                 setIsLoading(false);
 
                 socket = io(process.env.NODE_EnV === "development" ? "localhost:5000/" : "https://talkreddit.apps.johnseong.info", {
@@ -251,10 +248,7 @@ export default function Home() {
                     </>
                     : !isLoading ? <Stack direction={['column', 'row']} spacing='12px'>{subRedditList.map((tempSubRedditName) => (<Button width='min-content' colorScheme='orange' variant='outline' onClick={() => {
                         dispatch(setSelectedSubRedditName(tempSubRedditName));
-
-                        if (!isSocketChannelOpen) {
-                            selectSubReddit(tempSubRedditName);
-                        }
+                        selectSubReddit(tempSubRedditName);
                     }}>
                         <span>r/<b>{tempSubRedditName}</b></span>
                     </Button>))}</Stack> : <Box className="flex flex-col"><code className="text-xl font-bold" style={{ color: "#bdefff" }}>Setting up the Neural Network... It might take a little while.</code>

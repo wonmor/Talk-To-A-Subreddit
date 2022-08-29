@@ -91,7 +91,7 @@ export default function Chat() {
             <form onSubmit={onMessageSubmit}>
                 <FormControl isRequired isInvalid={isError}>
                     <Stack direction={['column', 'row']} spacing={2}>
-                        <Input placeholder='Start chatting with our bot...' value={state['message']} onChange={e => onTextChange(e)} marginRight={"10px"} width={"80%"} className="generic-text" />
+                        <Input placeholder='Start chatting with me...' value={state['message']} onChange={e => onTextChange(e)} marginRight={"10px"} width={"80%"} className="generic-text" />
 
                         <Button onClick={onMessageSubmit} width={"min-content"} leftIcon={<MdSend />} colorScheme='orange' variant='solid'>
                             <span className="font-bold">Send</span>
