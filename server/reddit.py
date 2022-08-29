@@ -96,7 +96,7 @@ class Reddit(object):
 
         # Saving the data in a pandas dataframe
         self.top_posts = pd.DataFrame(self.posts_dict)
-        self.top_posts.to_csv(f"server/datasets/{self.subreddit_name}/reddit_posts.csv", index=True)
+        self.top_posts.to_csv(f"server/datasets/{self.subreddit_name.lower()}/reddit_posts.csv", index=True)
 
     @staticmethod
     def retrieve_comments(post_url="https://www.reddit.com/r/aspergers/comments/w5mhei/wooo_im_getting_my_first_ever_promotion/"):
