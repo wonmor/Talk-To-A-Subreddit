@@ -150,16 +150,7 @@ export default function Home() {
 
     const openSocketChannel = (debugMode = false) => {
         setIsLoading(true);
-
-        let url = ""
-
-        if (process.env.NODE_EnV === "development") {
-            url = "http://localhost"
-
-        } else if (process.env.NODE_EnV === "production") {
-            url = "https://talkreddit.apps.johnseong.info"
-        }
-
+        
         axios.post('/api/connect')
             .then(function () {
                 dispatch(setGoodToGo(true));
@@ -167,10 +158,10 @@ export default function Home() {
 
                 setIsLoading(false);
 
-                socket = io(url + ":5000/", {
+                socket = io(process.env.NODE_EnV === "development" ? "localhost:5000/" : "https://talkreddit.apps.johnseong.info", {
                     transports: ["websocket"],
                     cors: {
-                        origin: url + ":3000/",
+                        origin: process.env.NODE_EnV === "development" ? "localhost:3000/" : "https://talkreddit.apps.johnseong.info",
                     },
                 });
             })
