@@ -226,7 +226,7 @@ class Train(object):
                 comment_list = []
 
                 emit('reply', ({'name': 'Bot', 'message': f"Thinking about something related to {tag.strip('[').strip(']')}..."}))
-
+            
                 for key, value in enumerate(self.reddit_posts['Tag'].values()):
                     # Converting the string to list...
                     temp_value = str(value).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")
