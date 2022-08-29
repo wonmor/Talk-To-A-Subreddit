@@ -245,7 +245,7 @@ export default function Home() {
                                     )}
                                 </FormControl>
                             </form>
-                            : <Box className="flex flex-col"><code className="text-2xl font-bold" style={{ color: "#bdefff" }}>Setting up the Neural Network...</code>
+                            : <Box className="flex flex-col"><code className="text-xl font-bold" style={{ color: "#bdefff" }}>Setting up the Neural Network... It might take a little while.</code>
                                 {buildHistory && <>
                                     {buildHistory.map(({ type, message }) => (<code className={type === 'log' ? 'text-white' : type === 'error' && 'text-red-200'}>{message}</code>))}</>}</Box>}
                     </>
