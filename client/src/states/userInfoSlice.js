@@ -8,7 +8,8 @@ export const userInfoSlice = createSlice({
         goodToGo: false,
         isSocketChannelOpen: false,
         chatHistory: "",
-        buildHistory: ""
+        buildHistory: "",
+        selectedSubRedditName: ""
     },
     reducers: {
         setUsername: (state, action) => {
@@ -40,10 +41,15 @@ export const userInfoSlice = createSlice({
             if (state.setBuildHistory !== action.payload) {
                 return {...state, buildHistory: action.payload };
             }
+        },
+        setSelectedSubRedditName: (state, action) => {
+            if (state.setSelectedSubRedditName !== action.payload) {
+                return {...state, selectedSubRedditName: action.payload };
+            }
         }
     }
 })
 
-export const { setUsername, setEmail, setGoodToGo, setIsSocketChannelOpen, setChatHistory, setBuildHistory } = userInfoSlice.actions;
+export const { setUsername, setEmail, setGoodToGo, setIsSocketChannelOpen, setChatHistory, setBuildHistory, setSelectedSubRedditName } = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;

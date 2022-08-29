@@ -24,7 +24,8 @@ import {
     setUsername,
     setGoodToGo,
     setIsSocketChannelOpen,
-    setBuildHistory
+    setBuildHistory,
+    setSelectedSubRedditName
 } from "../../states/userInfoSlice";
 
 export let socket;
@@ -132,6 +133,8 @@ export default function Home() {
 
     const handleInputChange = (e) => setInput(e.target.value);
 
+    const subRedditList = ['Aspergers'];
+
     const statusMessage = (goodToGo) => {
         if (goodToGo) {
             return (
@@ -152,7 +155,7 @@ export default function Home() {
 
     const openSocketChannel = (debugMode = false) => {
         setIsLoading(true);
-        
+
         axios.post('/api/connect')
             .then(function () {
                 dispatch(setGoodToGo(true));
@@ -246,9 +249,12 @@ export default function Home() {
                                 {buildHistory && <>
                                     {buildHistory.map(({ type, message }, index) => (<code className={type === 'log' ? 'text-white' : type === 'error' && 'text-red-200'}>message</code>))}</>}</Box>}
                     </>
-                    : <Button width='min-content' colorScheme='orange' variant='outline' onClick={() => { navigate('/chat') }}>
-                        <span>r/<b>Aspegers</b></span>
-                    </Button>}
+                    : subRedditList.map((tempSubRedditName) => (<Button width='min-content' colorScheme='orange' variant='outline' onClick={() => {
+                        navigate('/chat');
+                        dispatch(setSelectedSubRedditName(tempSubRedditName));
+                    }}>
+                        <span>r/<b>{tempSubRedditName}</b></span>
+                    </Button>))}
 
                 <Text className="text-xl mb-5 mt-5">
                     View our Zero-tolerant <button onClick={() => { navigate('/about') }} className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</button>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.

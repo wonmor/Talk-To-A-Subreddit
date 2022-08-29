@@ -21,6 +21,7 @@ export default function Chat() {
 
     const username = useSelector((state) => state.userInfo.username);
     const chatHistory = useSelector((state) => state.userInfo.chatHistory);
+    const selectedSubRedditName = useSelector((state) => state.userInfo.selectedSubRedditName);
 
     const [state, setState] = useState({ message: '', name: username });
 
@@ -79,11 +80,13 @@ export default function Chat() {
 
     return (
         <Box className="border-t-2 border-white md:border-transparent">
-            <Mount content={
-                <Text className="text-4xl mb-5 mt-5 md:mt-0">
-                    Bonjour, <b>{username}</b>. How was your day?
-                </Text>
-            } show={show} />
+            {selectedSubRedditName &&
+                <Mount content={
+                    <Text className="text-4xl mb-5 mt-5 md:mt-0">
+                        Howdy, <b>{username}</b>. I'm r/<b className='text-orange-400'>{selectedSubRedditName}</b>.
+                    </Text>
+                } show={show} />
+            }
 
             <form onSubmit={onMessageSubmit}>
                 <FormControl isRequired isInvalid={isError}>
