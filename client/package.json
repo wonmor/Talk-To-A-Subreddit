@@ -22,6 +22,7 @@
         "@testing-library/react": "^13.2.0",
         "@testing-library/user-event": "^13.5.0",
         "axios": "^0.27.2",
+        "concurrently": "^7.3.0",
         "eslint": "^8.22.0",
         "eslint-config-react-app": "^7.0.1",
         "framer-motion": "^6.5.1",
@@ -40,8 +41,7 @@
         "yarn": "^1.22.19"
     },
     "scripts": {
-        "start": "react-scripts start",
-        "start-api": "cd ../ && venv/bin/flask run --no-debugger",
+        "start": "concurrently \"react-scripts start\" \"cd ../ && venv/bin/flask run --no-debugger\"",
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"

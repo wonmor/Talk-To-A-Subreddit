@@ -96,7 +96,7 @@ function LoadingText(props) {
 
 export function Showcase() {
     return (
-        <Box style={{ width: "fit-parent", height: "85vh" }}>
+        <Box style={{ width: "fit-parent", height: "85vh", marginTop: "20px" }}>
             <Canvas className="border-2 border-gray-600 rounded" style={{ borderColor: "#bdefff" }} camera={{ fov: 15, position: [-25, 0, 0] }}>
                 <mesh rotation={[-8, 0, 0]}>
                     <GroundPlane />
@@ -208,19 +208,19 @@ export default function Home() {
             <Box className="flex flex-col border-t-2 border-white md:border-transparent">
                 <Mount content={
                     <>
-                        <Text className="mt-5 md:mt-0 mb-2 text-5xl">
+                        <Text className="mt-5 md:mt-0 mb-2 text-3xl md:text-5xl">
                             {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(goodToGo)} show={goodToGo} />}
                         </Text>
 
                         {!goodToGo &&
-                            <Text className="mb-5 text-5xl mt-5 md:mt-0">
+                            <Text className="mb-5 text-3xl md:text-5xl mt-5 md:mt-0">
                                 If you don't mind me asking, <b style={{ color: "#ffbdf4" }}>what should I call you?</b>
                             </Text>
                         }
                     </>
                 } show={show} />
 
-                <Text className="mb-5 text-2xl mt-2 md:mt-0">
+                <Text className="mb-5 text-lg md:text-2xl mt-2 md:mt-0">
                     I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.
                 </Text>
 
