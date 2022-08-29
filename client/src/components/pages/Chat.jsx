@@ -26,7 +26,6 @@ export default function Chat() {
 
     useEffect(() => {
         socket.on('reply', ({ name, message }) => {
-            console.log(message)
             dispatch(setChatHistory([...chatHistory, { name, message }]));
         });
     }, [chatHistory, dispatch]);

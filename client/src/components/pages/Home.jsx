@@ -23,7 +23,8 @@ import { io } from 'socket.io-client';
 import {
     setUsername,
     setGoodToGo,
-    setIsSocketChannelOpen
+    setIsSocketChannelOpen,
+    setBuildHistory
 } from "../../states/userInfoSlice";
 
 export let socket;
@@ -127,6 +128,7 @@ export default function Home() {
     const username = useSelector((state) => state.userInfo.username);
     const goodToGo = useSelector((state) => state.userInfo.goodToGo);
     const isSocketChannelOpen = useSelector((state) => state.userInfo.isSocketChannelOpen);
+    const buildHistory = useSelector((state) => state.userInfo.buildHistory);
 
     const handleInputChange = (e) => setInput(e.target.value);
 
@@ -162,7 +164,7 @@ export default function Home() {
                 socket = io(process.env.NODE_EnV === "development" ? "localhost:5000/" : "https://talkreddit.apps.johnseong.info", {
                     transports: ["websocket"],
                     cors: {
-                        origin: process.env.NODE_EnV === "development" ? "localhost:3000/" : "https://talkreddit.apps.johnseong.info",
+                        origin: process.env.NODE_EnV === "development" ? "http://localhost:3000/" : "https://talkreddit.apps.johnseong.info",
                     },
                 });
             })
@@ -190,6 +192,17 @@ export default function Home() {
     useEffect(() => {
         set(true);
     }, []);
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('build', (data) => {
+                const type = data[0];
+                const message = data[1];
+
+                dispatch(setBuildHistory([...setBuildHistory, { type, message }]));
+            });
+        }
+    }, [buildHistory, dispatch])
 
     return (
         <>
@@ -230,7 +243,9 @@ export default function Home() {
                                     )}
                                 </FormControl>
                             </form>
-                            : <h1 className="text-2xl font-bold text-orange-500">Loading...</h1>}
+                            : <Box className="flex flex-col"><code className="text-2xl font-bold" style={{ color: "#bdefff" }}>Loading...</code>
+                                {buildHistory && <>
+                                    {buildHistory.map(({ type, message }, index) => (<code className={type === 'log' ? 'text-white' : type === 'error' && 'text-red-200'}>message</code>))}</>}</Box>}
                     </>
                     : <Button width='min-content' colorScheme='orange' variant='outline' onClick={() => { navigate('/chat') }}>
                         <span>r/<b>Aspegers</b></span>

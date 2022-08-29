@@ -7,7 +7,8 @@ export const userInfoSlice = createSlice({
         email: "stevemakinson@gmail.com",
         goodToGo: false,
         isSocketChannelOpen: false,
-        chatHistory: ""
+        chatHistory: "",
+        buildHistory: ""
     },
     reducers: {
         setUsername: (state, action) => {
@@ -34,10 +35,15 @@ export const userInfoSlice = createSlice({
             if (state.setChatHistory !== action.payload) {
                 return {...state, chatHistory: action.payload };
             }
+        },
+        setBuildHistory: (state, action) => {
+            if (state.setBuildHistory !== action.payload) {
+                return {...state, buildHistory: action.payload };
+            }
         }
     }
 })
 
-export const { setUsername, setEmail, setGoodToGo, setIsSocketChannelOpen, setChatHistory } = userInfoSlice.actions;
+export const { setUsername, setEmail, setGoodToGo, setIsSocketChannelOpen, setChatHistory, setBuildHistory } = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;

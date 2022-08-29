@@ -10,7 +10,11 @@ import json
 import pickle
 import random
 import codecs
+
+from flask import current_app
 from flask_socketio import emit
+
+from . import socketio
 
 from server.reddit import Reddit
 
@@ -49,20 +53,20 @@ class Train(object):
 
     @staticmethod
     def download_nltk():
-        print("Downloading the NLTK models...")
+        socketio.emit("build", list({'log', "Downloading the NLTK models..."}))
 
         nltk.download("punkt")
         nltk.download('wordnet')
         nltk.download('omw-1.4')
 
     def retrieve(self):
-        print("Retrieving the user-generated dataset...")
+        socketio.emit("build", list({'log', "Retrieving the user-generated datasets..."}))
 
         # Loading intents.json
         with open('server/datasets/intents.json') as intents:
             self.data = json.load(intents)
 
-        print("Retrieving the pre-generated Reddit posts' datasets...")
+        socketio.emit("build", list({'log', "Retrieving the pre-generated Reddit posts..."}))
 
         # Read the pre-generated reddit post CSV file...
         self.reddit_posts = pd.read_csv('server/datasets/reddit_posts.csv').to_dict()
@@ -71,7 +75,7 @@ class Train(object):
         stemmer = LancasterStemmer()
 
     def parse(self):
-        print("Parsing the user-generated dataset...")
+        socketio.emit("build", list({'log', "Parsing the user-generated datasets..."}))
 
         # getting informations from intents.json--
         self.words = []
@@ -81,7 +85,7 @@ class Train(object):
 
         for intent in self.data['intents']:
             for pattern in intent['patterns']:
-                print(f"USER-GENERATED: Parsing the word: {pattern}")
+                socketio.emit("build", list({'log', f"USER-GENERATED: Parsing the word: {pattern}"}))
 
                 wrds = nltk.word_tokenize(pattern)
                 self.words.extend(wrds)
@@ -91,13 +95,14 @@ class Train(object):
                 if intent['tag'] not in self.labels:
                     self.labels.append(intent['tag'])
 
-        print("Parsing the pre-generated Reddit posts' datasets...")
+        socketio.emit("build", list({'log', "Parsing the pre-generated Reddit posts..."}))
 
         # getting data from the parsed reddit posts...
         for index, title in enumerate(self.reddit_posts['Title'].values()):
-            print(f"REDDIT POST: Parsing the word: {title}")
+            socketio.emit("build", list({'log', f"REDDIT POST: Parsing the word: {title}"}))
 
             wrds = nltk.word_tokenize(title)
+
             self.words.extend(wrds)
             self.x_docs.append(wrds)
             self.y_docs.append(self.reddit_posts['Tag'][index])
@@ -106,7 +111,7 @@ class Train(object):
                 self.labels.append(self.reddit_posts['Tag'][index])
 
     def preprocess(self):
-        print("Stemming the words and removing duplicate elements...")
+        socketio.emit("build", list({'log', "Stemming the words and removing duplicate elements..."}))
 
         # Stemming the words and removing duplicate elements.
         self.words = [stemmer.stem(w.lower()) for w in self.words if w not in "?"]
@@ -114,7 +119,7 @@ class Train(object):
         self.labels = sorted(self.labels)
 
     def hot_encode(self):
-        print("Hot Encoding: Converting the words to numerals...")
+        socketio.emit("build", list({'log', "HOT ENCODING: Converting the words to numerals..."}))
 
         self.training = []
         self.output = []
@@ -144,7 +149,7 @@ class Train(object):
             pickle.dump((self.words, self.labels, self.training, self.output), f)
 
     def create_model(self):
-        print("Creating a ML model...")
+        socketio.emit("build", list({'log', "Creating a ML model..."}))
 
         net = tflearn.input_data(shape=[None, len(self.training[0])])
         net = tflearn.fully_connected(net, 10)
@@ -172,7 +177,7 @@ class Train(object):
         try:
             s_words = [stemmer.stem(word.lower()) for word in s_words]
         except:
-            print("Need to retrieve the data first!")
+            socketio.emit("build", list({'error', "Need to retrieve the data first!"}))
 
         for s_word in s_words:
             for i, w in enumerate(words): 
@@ -182,7 +187,7 @@ class Train(object):
         return np.array(bag)
 
     def start_training(self):
-        print("Training process has been started!")
+        socketio.emit('build', list({'log', "Training process has been started!"}))
 
         self.retrieve()
 
@@ -239,20 +244,20 @@ class Train(object):
 
                     temp_tag += temp_tag_synonyms
 
-                    print(temp_tag) if self.debug_mode else None
-                    print(temp_value) if self.debug_mode else None
+                    current_app.logger.info(temp_tag) if self.debug_mode else None
+                    current_app.logger.info(temp_value) if self.debug_mode else None
 
                     flag = []
                     res = False
                     
                     # This part of the code is only used when there're more than one word for the tag of each question (x variable)...
                     for t in temp_tag:
-                        print(f"Current t value: {t}") if self.debug_mode else None
+                        current_app.logger.info(f"Current t value: {t}") if self.debug_mode else None
 
                         if t in temp_value:
                             flag.append(t)
 
-                    print(flag) if self.debug_mode else None
+                    current_app.logger.info(flag) if self.debug_mode else None
 
                     if flag:
                         res = True
@@ -261,10 +266,10 @@ class Train(object):
                     if temp_tag in temp_value or temp_tag == temp_value:
                         res = True
 
-                    print(res) if self.debug_mode else None
+                    current_app.logger.info(res) if self.debug_mode else None
                     
                     if res:
-                        print("Matching key found!") if self.debug_mode else None
+                        current_app.logger.info("Matching key found!") if self.debug_mode else None
 
                         comment_list.append(str(self.reddit_posts['Total Comments']).replace('["', '').replace('"]', '').replace("['", "").replace("']", "").split(", ")[key])
                 
