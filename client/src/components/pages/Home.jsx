@@ -24,7 +24,8 @@ import {
     setUsername,
     setGoodToGo,
     setBuildHistory,
-    setSelectedSubRedditName
+    setSelectedSubRedditName,
+    setChatHistory
 } from "../../states/userInfoSlice";
 
 export let socket;
@@ -165,6 +166,7 @@ export default function Home() {
                     },
                 });
 
+                dispatch(setChatHistory(''));
                 navigate('/chat');
             })
             .catch(function () {
