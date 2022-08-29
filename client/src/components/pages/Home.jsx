@@ -133,7 +133,7 @@ export default function Home() {
 
     const handleInputChange = (e) => setInput(e.target.value);
 
-    const subRedditList = ['Aspergers'];
+    const subRedditList = ['AskReddit', 'Aspergers'];
 
     const statusMessage = (goodToGo) => {
         if (goodToGo) {
@@ -144,7 +144,7 @@ export default function Home() {
                     </span>
 
                     <span className="mb-5 text-5xl mt-5 md:mt-0">
-                        Choose a <b style={{ color: "#ffbdf4" }}>Subreddit</b> Bot.
+                        Choose a <b style={{ color: "#ffbdf4" }}>Subreddit Bot</b>.
                     </span>
                 </div>
             );
@@ -153,14 +153,12 @@ export default function Home() {
         }
     };
 
-    const openSocketChannel = (debugMode = false) => {
+    const openSocketChannel = async (debugMode = false) => {
         setIsLoading(true);
 
-        axios.post('/api/connect')
+        await axios.post('/api/connect')
             .then(function () {
-                dispatch(setGoodToGo(true));
                 dispatch(setIsSocketChannelOpen(true));
-
                 setIsLoading(false);
 
                 socket = io(process.env.NODE_EnV === "development" ? "localhost:5000/" : "https://talkreddit.apps.johnseong.info", {
@@ -169,10 +167,19 @@ export default function Home() {
                         origin: process.env.NODE_EnV === "development" ? "http://localhost:3000/" : "https://talkreddit.apps.johnseong.info",
                     },
                 });
+
+                navigate('/chat');
             })
             .catch(function () {
                 dispatch(setGoodToGo(false));
             });
+    };
+
+    const selectSubReddit = async (tempSubRedditName) => {
+        await axios.post('/api/set', { "subRedditName": tempSubRedditName })
+            .then(function () {
+                openSocketChannel();
+            })
     };
 
     const inputSubmitAction = (e) => {
@@ -184,10 +191,7 @@ export default function Home() {
 
         if (!isInputEmpty) {
             dispatch(setUsername(input));
-
-            if (!isSocketChannelOpen) {
-                openSocketChannel();
-            }
+            dispatch(setGoodToGo(true));
         }
     };
 
@@ -212,7 +216,7 @@ export default function Home() {
                 <Mount content={
                     <>
                         <Text className="mt-5 md:mt-0 mb-2 text-3xl md:text-5xl">
-                            {!goodToGo ? <span>I am so <b>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(goodToGo)} show={goodToGo} />}
+                            {!goodToGo ? <span>I am so <b style={{color: "#bdefff"}}>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(goodToGo)} show={goodToGo} />}
                         </Text>
 
                         {!goodToGo &&
@@ -229,32 +233,33 @@ export default function Home() {
 
                 {!goodToGo ?
                     <>
-                        {!isLoading ?
-                            <form onSubmit={inputSubmitAction}>
-                                <FormControl isRequired isInvalid={isError}>
-                                    <Stack direction={['column', 'row']} spacing={2}>
-                                        <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
+                        <form onSubmit={inputSubmitAction}>
+                            <FormControl isRequired isInvalid={isError}>
+                                <Stack direction={['column', 'row']} spacing={2}>
+                                    <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
 
-                                        <Button className="drop-shadow-xl" width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
-                                            <span className="font-bold">Submit</span>
-                                        </Button>
-                                    </Stack>
+                                    <Button className="drop-shadow-xl" width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
+                                        <span className="font-bold">Submit</span>
+                                    </Button>
+                                </Stack>
 
-                                    {isError && (
-                                        <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
-                                    )}
-                                </FormControl>
-                            </form>
-                            : <Box className="flex flex-col"><code className="text-xl font-bold" style={{ color: "#bdefff" }}>Setting up the Neural Network... It might take a little while.</code>
-                                {buildHistory && <>
-                                    {buildHistory.map(({ type, message }) => (<code className={type === 'log' ? 'text-white' : type === 'error' && 'text-red-200'}>{message}</code>))}</>}</Box>}
+                                {isError && (
+                                    <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
+                                )}
+                            </FormControl>
+                        </form>
                     </>
-                    : subRedditList.map((tempSubRedditName) => (<Button width='min-content' colorScheme='orange' variant='outline' onClick={() => {
-                        navigate('/chat');
+                    : !isLoading ? <Stack direction={['column', 'row']} spacing='12px'>{subRedditList.map((tempSubRedditName) => (<Button width='min-content' colorScheme='orange' variant='outline' onClick={() => {
                         dispatch(setSelectedSubRedditName(tempSubRedditName));
+
+                        if (!isSocketChannelOpen) {
+                            selectSubReddit(tempSubRedditName);
+                        }
                     }}>
                         <span>r/<b>{tempSubRedditName}</b></span>
-                    </Button>))}
+                    </Button>))}</Stack> : <Box className="flex flex-col"><code className="text-xl font-bold" style={{ color: "#bdefff" }}>Setting up the Neural Network... It might take a little while.</code>
+                        {buildHistory && <>
+                            {buildHistory.map(({ type, message }) => (<code className={type === 'log' ? 'text-white' : type === 'error' && 'text-red-200'}>{message}</code>))}</>}</Box>}
 
                 <Text className="text-xl mb-5 mt-5">
                     View our Zero-tolerant <button onClick={() => { navigate('/about') }} className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</button>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.

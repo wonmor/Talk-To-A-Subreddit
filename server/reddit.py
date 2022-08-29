@@ -5,7 +5,6 @@ import pandas as pd
 import os
 
 from keybert import KeyBERT
-from flask import current_app
 
 '''
 Talk to a Subreddit: An AI Chatbot
@@ -36,7 +35,7 @@ class Reddit(object):
 
     @staticmethod
     def download_kw_model():
-        current_app.logger.info("Downloading the kw_model...")
+        print("Downloading the kw_model...")
 
         global kw_model
         kw_model = KeyBERT(model='all-mpnet-base-v2')
@@ -55,12 +54,12 @@ class Reddit(object):
 
         keywords_list = list(dict(keywords).keys())
 
-        current_app.logger.info(f"Extracting the keywords: {keywords_list}")
+        print(f"Extracting the keywords: {keywords_list}")
 
         return keywords_list
 
     def set_time_frame(self, post_count=100):
-        current_app.logger.info("Setting the time frame for reddit parsing...")
+        print("Setting the time frame for reddit parsing...")
 
         subreddit = reddit_read_only.subreddit(self.subreddit_name)
 
@@ -74,7 +73,7 @@ class Reddit(object):
 
     def retrieve_posts(self):
         for post in self.posts:
-            current_app.logger.info(f"Parsing the Reddit post: {post.title}")
+            print(f"Parsing the Reddit post: {post.title}")
 
             # Title of each post
             self.posts_dict["Title"].append(post.title)
@@ -93,11 +92,11 @@ class Reddit(object):
             # URL of each post
             self.posts_dict["Post URL"].append(post.url)
 
-        current_app.logger.info("Saving the parsed Reddit posts' database...")
+        print("Saving the parsed Reddit posts' database...")
 
         # Saving the data in a pandas dataframe
         self.top_posts = pd.DataFrame(self.posts_dict)
-        self.top_posts.to_csv("server/datasets/reddit_posts.csv", index=True)
+        self.top_posts.to_csv(f"server/datasets/{self.subreddit_name}/reddit_posts.csv", index=True)
 
     @staticmethod
     def retrieve_comments(post_url="https://www.reddit.com/r/aspergers/comments/w5mhei/wooo_im_getting_my_first_ever_promotion/"):
@@ -125,4 +124,4 @@ def start_parsing_reddit(subreddit_name="aspergers"):
     reddit.retrieve_posts()
 
 # Comment the line below upon running train.py...
-# start_parsing_reddit()
+# start_parsing_reddit("askreddit")

@@ -48,8 +48,12 @@ HOW TO INSTALL TENSORFLOW ON A MACOS (ARM64, a.k.a. Apple Silicon) DEVICE:
 '''
 
 class Train(object):
-    def __init__(self, debug_mode=False):
+    def __init__(self, debug_mode=False, subreddit_name="aspergers"):
         self.debug_mode = debug_mode
+        self.subreddit_name = subreddit_name
+
+    def set_subreddit_name(self, subreddit_name):
+        self.subreddit_name = subreddit_name
 
     @staticmethod
     def download_nltk():
@@ -69,7 +73,7 @@ class Train(object):
         socketio.emit("build", list({'log', "Retrieving the pre-generated Reddit posts..."}))
 
         # Read the pre-generated reddit post CSV file...
-        self.reddit_posts = pd.read_csv('server/datasets/reddit_posts.csv').to_dict()
+        self.reddit_posts = pd.read_csv(f'server/datasets/{self.subreddit_name}/reddit_posts.csv').to_dict()
 
         global stemmer
         stemmer = LancasterStemmer()
@@ -145,7 +149,7 @@ class Train(object):
         self.training = np.array(self.training)
         self.output = np.array(self.output)
 
-        with open('server/datasets/data.pickle','wb') as f:
+        with open(f'server/datasets/{self.subreddit_name}/data.pickle','wb') as f:
             pickle.dump((self.words, self.labels, self.training, self.output), f)
 
     def create_model(self):
@@ -163,11 +167,11 @@ class Train(object):
         # When runtime error occurs at this point... use the tutorial: https://stackoverflow.com/questions/65022518/runtimeerror-attempted-to-use-a-closed-session-with-tflearn-dnn
         
         try:
-            self.model.load("server/datasets/model.tflearn")
+            self.model.load(f"server/datasets/{self.subreddit_name}/model.tflearn")
         except:
             self.model = tflearn.DNN(net) # Needs to write this line twice for some reason...
             self.model.fit(self.training, self.output, n_epoch=500, batch_size=8, show_metric=True)
-            self.model.save('server/datasets/model.tflearn')
+            self.model.save(f'server/datasets/{self.subreddit_name}/model.tflearn')
 
     @staticmethod
     def bag_of_words(s, words):
@@ -192,7 +196,7 @@ class Train(object):
         self.retrieve()
 
         try:
-            with open('server/datasets/data.pickle','rb') as f:
+            with open(f'server/datasets/{self.subreddit_name}/data.pickle','rb') as f:
                 self.words, self.labels, self.training, self.output = pickle.load(f)
         except:
             self.parse()

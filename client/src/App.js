@@ -9,6 +9,7 @@ import Base from './components/Base';
 const NotFound = React.lazy(() => import('./components/pages/NotFound'));
 const Home = React.lazy(() => import('./components/pages/Home'));
 const Chat = React.lazy(() => import('./components/pages/Chat'));
+const About = React.lazy(() => import('./components/pages/About'));
 
 /*
 ██████╗░░█████╗░██╗░░░██╗████████╗███████╗██████╗░░██████╗
@@ -46,6 +47,7 @@ export default function App() {
         <Route path="*" element={<Base content={NotFound} />} />
         <Route exact path="/" element={<Base content={Home} />} />
         <Route path="/chat" element={<Base content={Chat} />} />
+        <Route path="/docs" element={<Base content={About} />} />
       </Routes>
     </div>
   );
