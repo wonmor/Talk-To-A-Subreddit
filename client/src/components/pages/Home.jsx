@@ -150,7 +150,7 @@ export default function Home() {
 
     const openSocketChannel = (debugMode = false) => {
         setIsLoading(true);
-        
+
         axios.post('/api/connect')
             .then(function () {
                 dispatch(setGoodToGo(true));
@@ -158,6 +158,7 @@ export default function Home() {
 
                 setIsLoading(false);
 
+                // Depending on the environment, dynamically change the URL or the IP address used for making a secure WebSocket connection...
                 socket = io(process.env.NODE_EnV === "development" ? "localhost:5000/" : "https://talkreddit.apps.johnseong.info", {
                     transports: ["websocket"],
                     cors: {
