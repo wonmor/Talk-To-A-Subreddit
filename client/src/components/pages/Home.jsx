@@ -247,7 +247,7 @@ export default function Home() {
                             </form>
                             : <Box className="flex flex-col"><code className="text-2xl font-bold" style={{ color: "#bdefff" }}>Loading...</code>
                                 {buildHistory && <>
-                                    {buildHistory.map(({ type, message }, index) => (<code className={type === 'log' ? 'text-white' : type === 'error' && 'text-red-200'}>{message}</code>))}</>}</Box>}
+                                    {buildHistory.map(({ type, message }) => (<code className={type === 'log' ? 'text-white' : type === 'error' && 'text-red-200'}>{message}</code>))}</>}</Box>}
                     </>
                     : subRedditList.map((tempSubRedditName) => (<Button width='min-content' colorScheme='orange' variant='outline' onClick={() => {
                         navigate('/chat');
