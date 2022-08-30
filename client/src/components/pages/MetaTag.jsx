@@ -1,6 +1,11 @@
 import { Helmet } from 'react-helmet';
 
 const MetaTag = props => {
+    /*
+    REACT HELMET TUTORIAL:
+    https://velog.io/@miyoni/noSSRyesSEO
+    */
+
     return (
         <Helmet>
             <title>{props.title}</title>
