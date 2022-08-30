@@ -10,7 +10,7 @@ The bot primarily learns from Reddit's posts and comments. This large dataset co
 
 ## Feature 1: Your Stupidly Loyal Friend
 
-<img width="700" alt="Screenshot 2022-08-29 at 5 43 50 AM" src="https://user-images.githubusercontent.com/35755386/187093787-cab0694b-1fb8-4654-aab7-25e5c84c2905.png">
+<img width="700" alt="Screenshot 2022-08-30 at 12 42 50 AM" src="https://user-images.githubusercontent.com/35755386/187353011-866a50be-76c8-4df5-b9cc-ad81a8d9cadf.png">
 
 ---
 
