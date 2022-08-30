@@ -3,7 +3,7 @@ import { Mount } from "../utilities/Transitions";
 
 import MetaTag from "./MetaTag";
 
-export default function NotFound() {
+export default function About() {
     return (
         <>
             <MetaTag title={"Talk to a Subreddit: An AI Chatbot"}
