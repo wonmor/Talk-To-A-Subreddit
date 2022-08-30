@@ -94,7 +94,7 @@ export default function Base(props) {
 
           <HStack spacing={8} alignItems={'center'}>
 
-            <Image className="logo-button" src="logo.svg" onClick={() => {
+            <Image className="logo-button" src="logo.svg" alt="logo" onClick={() => {
               navigate('/');
               onClose();
             }} />

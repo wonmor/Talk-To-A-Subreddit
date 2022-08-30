@@ -42,13 +42,13 @@ export default function App() {
   */
 
   return (
-    <div>
+    <>
       <Routes>
         <Route path="*" element={<Base content={NotFound} />} />
         <Route exact path="/" element={<Base content={Home} />} />
         <Route path="/chat" element={<Base content={Chat} />} />
         <Route path="/docs" element={<Base content={About} />} />
       </Routes>
-    </div>
+    </>
   );
 }

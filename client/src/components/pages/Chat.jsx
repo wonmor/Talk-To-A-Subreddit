@@ -15,6 +15,8 @@ import { setChatHistory } from '../../states/userInfoSlice';
 
 import { useNavigate } from 'react-router-dom';
 
+import MetaTag from './MetaTag';
+
 export default function Chat() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -79,33 +81,41 @@ export default function Chat() {
     };
 
     return (
-        <Box className="border-t-2 border-white md:border-transparent">
-            {selectedSubRedditName &&
-                <Mount content={
-                    <Text className="text-4xl mb-5 mt-5 md:mt-0">
-                        Howdy, <b>{username}</b>. I'm r/<b className='text-orange-400'>{selectedSubRedditName}</b>.
-                    </Text>
-                } show={show} />
-            }
+        <>
+            <MetaTag title={"Talk to a Subreddit: An AI Chatbot"}
+                description={"Talk to a Subreddit is an AI chatbot that lets you talk to any subreddits on Reddit with its own unique personality."}
+                keywords={"ai chatbot, google ai chatbot sentient, ai chatbot free, best ai chatbot, ai chatbot online, ai chatbot for fun, reddit ai chatbot, conversational ai chatbot, ai chatbot friend"}
+                imgsrc={"talkreddit_character.png"}
+                url={"https://talkreddit.com"} />
 
-            <form onSubmit={onMessageSubmit}>
-                <FormControl isRequired isInvalid={isError}>
-                    <Stack direction={['column', 'row']} spacing={2}>
-                        <Input placeholder='Start chatting with me...' value={state['message']} onChange={e => onTextChange(e)} marginRight={"10px"} width={"80%"} className="generic-text" />
+            <Box className="border-t-2 border-white md:border-transparent">
+                {selectedSubRedditName &&
+                    <Mount content={
+                        <Text className="text-4xl mb-5 mt-5 md:mt-0">
+                            Howdy, <b>{username}</b>. I'm r/<b className='text-orange-400'>{selectedSubRedditName}</b>.
+                        </Text>
+                    } show={show} />
+                }
 
-                        <Button onClick={onMessageSubmit} width={"min-content"} leftIcon={<MdSend />} colorScheme='orange' variant='solid'>
-                            <span className="font-bold">Send</span>
-                        </Button>
-                    </Stack>
+                <form onSubmit={onMessageSubmit}>
+                    <FormControl isRequired isInvalid={isError}>
+                        <Stack direction={['column', 'row']} spacing={2}>
+                            <Input placeholder='Start chatting with me...' value={state['message']} onChange={e => onTextChange(e)} marginRight={"10px"} width={"80%"} className="generic-text" />
 
-                    {isError && (
-                        <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
-                    )}
-                    <ChatList />
-                </FormControl>
-            </form>
+                            <Button onClick={onMessageSubmit} width={"min-content"} leftIcon={<MdSend />} colorScheme='orange' variant='solid'>
+                                <span className="font-bold">Send</span>
+                            </Button>
+                        </Stack>
 
-            <Showcase />
-        </Box>
+                        {isError && (
+                            <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
+                        )}
+                        <ChatList />
+                    </FormControl>
+                </form>
+
+                <Showcase />
+            </Box>
+        </>
     );
 }

@@ -18,6 +18,8 @@ import { Mount } from "../utilities/Transitions";
 
 import quicksand from '../../assets/Quicksand.json';
 
+import MetaTag from './MetaTag';
+
 import { io } from 'socket.io-client';
 
 import {
@@ -211,11 +213,17 @@ export default function Home() {
 
     return (
         <>
+            <MetaTag title={"Talk to a Subreddit: An AI Chatbot"}
+                description={"Talk to a Subreddit is an AI chatbot that lets you talk to any subreddits on Reddit with its own unique personality."}
+                keywords={"ai chatbot, google ai chatbot sentient, ai chatbot free, best ai chatbot, ai chatbot online, ai chatbot for fun, reddit ai chatbot, conversational ai chatbot, ai chatbot friend"}
+                imgsrc={"talkreddit_character.png"}
+                url={"https://talkreddit.com"} />
+
             <Box className="flex flex-col border-t-2 border-white md:border-transparent">
                 <Mount content={
                     <>
                         <Text className="mt-5 md:mt-0 mb-2 text-3xl md:text-5xl">
-                            {!goodToGo ? <span>I am so <b style={{color: "#bdefff"}}>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(goodToGo)} show={goodToGo} />}
+                            {!goodToGo ? <span>I am so <b style={{ color: "#bdefff" }}>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(goodToGo)} show={goodToGo} />}
                         </Text>
 
                         {!goodToGo &&
