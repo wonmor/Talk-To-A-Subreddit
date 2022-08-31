@@ -4,7 +4,7 @@
 
 The bot primarily learns from Reddit's posts and comments. This large dataset comes from different subreddits; our goal is to not only closely model the way redditors talk, but also give out unnecessary advices to geeks and nerds on the internet.
 
-### [Launch Website](https://talkreddit.com)
+### [Launch Website](https://talkreddit.johnseong.info)
 
 ---
 
