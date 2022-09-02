@@ -86,7 +86,7 @@ export default function Chat() {
                 description={"Talk to a Subreddit is an AI chatbot that lets you talk to any subreddits on Reddit with its own unique personality."}
                 keywords={"ai chatbot, google ai chatbot sentient, ai chatbot free, best ai chatbot, ai chatbot online, ai chatbot for fun, reddit ai chatbot, conversational ai chatbot, ai chatbot friend"}
                 imgsrc={"talkreddit_character.png"}
-                url={"https://talkreddit.com"} />
+                url={"https://talkreddit.apps.johnseong.info"} />
 
             <Box className="border-t-2 border-white md:border-transparent">
                 {selectedSubRedditName &&
