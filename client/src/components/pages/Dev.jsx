@@ -27,11 +27,11 @@ export default function Dev() {
                 </Text>
 
                 <Text style={{ width: "fit-content" }} className="mt-5 bg-gray-700 rounded p-1">
-                    ONE | <code className="font-bold">https://talkreddit.com/api/set</code> — <code>POST</code>: Sets the name of the subreddit, sends it to an instantiated <code>Train</code> object
+                    ONE | <code className="font-bold">https://talkreddit.apps.johnseong.info/api/set</code> — <code>POST</code>: Sets the name of the subreddit, sends it to an instantiated <code>Train</code> object
                 </Text>
 
                 <Text style={{ width: "fit-content" }} className="mt-5 bg-gray-700 rounded p-1">
-                    TWO | <code className="font-bold">https://talkreddit.com/api/connect</code> — <code>POST</code>: When this API call is made, this function initializes the chat session (powered by <code>SocketIO</code>) with the bot
+                    TWO | <code className="font-bold">https://talkreddit.apps.johnseong.info/api/connect</code> — <code>POST</code>: When this API call is made, this function initializes the chat session (powered by <code>SocketIO</code>) with the bot
                 </Text>
 
                 <Text className="mt-10 text-3xl">
