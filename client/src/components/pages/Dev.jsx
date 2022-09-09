@@ -26,19 +26,19 @@ export default function Dev() {
                     1. <b>RESTful API</b> Methods
                 </Text>
 
-                <Text style={{ width: "fit-content" }} className="mt-5 bg-gray-700 rounded p-1">
-                    ONE | <code className="font-bold">https://talkreddit.apps.johnseong.info/api/set</code> — <code>POST</code>: Sets the name of the subreddit, sends it to an instantiated <code>Train</code> object
+                <Text className="w-auto sm:w-fit mt-5 bg-gray-700 rounded p-1">
+                    POST | <code className="font-bold">https://talkreddit.apps.johnseong.info/api/set</code> — Sets the name of the subreddit, sends it to an instantiated <code>Train</code> object
                 </Text>
 
-                <Text style={{ width: "fit-content" }} className="mt-5 bg-gray-700 rounded p-1">
-                    TWO | <code className="font-bold">https://talkreddit.apps.johnseong.info/api/connect</code> — <code>POST</code>: When this API call is made, this function initializes the chat session (powered by <code>SocketIO</code>) with the bot
+                <Text className="w-auto sm:w-fit mt-5 bg-gray-700 rounded p-1">
+                    POST | <code className="font-bold">https://talkreddit.apps.johnseong.info/api/connect</code> — When this API call is made, this function initializes the chat session (powered by <code>SocketIO</code>) with the bot
                 </Text>
 
                 <Text className="mt-10 text-3xl">
                     2. Primary <b>Technologies</b> Used
                 </Text>
 
-                <Text style={{ width: "fit-content" }} className="mt-5 bg-gray-700 rounded p-1">
+                <Text className="w-auto sm:w-fit mt-5 bg-gray-700 rounded p-1">
                     SERVER-SIDE | <code className="font-bold">Flask,
                         SQLAlchemy,
                         TensorFlow,
@@ -48,7 +48,7 @@ export default function Dev() {
                         Python Reddit API Wrapper (PRAW)</code>
                 </Text>
 
-                <Text style={{ width: "fit-content" }} className="mt-5 bg-gray-700 rounded p-1">
+                <Text className="w-auto sm:w-fit mt-5 bg-gray-700 rounded p-1">
                     CLIENT-SIDE | <code className="font-bold">React,
                         ThreeJS,
                         Redux,
