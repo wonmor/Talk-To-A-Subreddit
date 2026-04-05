@@ -1,22 +1,33 @@
 <img width="700" alt="logo" src="client/public/logo.png">
 
-**Talk to a Subreddit** is an AI chatbot that lets you talk to any subreddits on Reddit with its own unique personality. Powered by **BERT** and **deep learning**, using the Seq2Seq model with the help of Google Tensorflow.
+**Talk to a Subreddit** is an AI chatbot that lets you talk to any subreddit on Reddit as if it were a person. Powered by **OpenAI GPT** with a live **RAG (Retrieval-Augmented Generation)** pipeline that scrapes Reddit in real-time.
 
-The bot primarily learns from Reddit's posts and comments. This large dataset comes from different subreddits; our goal is to not only closely model the way redditors talk, but also give out unnecessary advices to geeks and nerds on the internet.
+Enter your OpenAI API key, pick any subreddit, and start chatting. The bot extracts keywords from your messages, searches the subreddit for relevant posts, and generates responses that embody the collective personality of that community.
 
 ### [Launch Website](https://talkreddit.apps.johnseong.com)
 
 ---
 
-## Feature 1: Your Stupidly Loyal Friend
+## How It Works
 
-<img width="700" alt="Screenshot 2022-08-30 at 12 42 50 AM" src="https://user-images.githubusercontent.com/35755386/187353011-866a50be-76c8-4df5-b9cc-ad81a8d9cadf.png">
+1. **You type a message** to the chatbot
+2. **Keywords are extracted** from your message using GPT
+3. **Reddit is searched** for the top 20 relevant posts in your chosen subreddit (via web scraping, no Reddit API key needed)
+4. **Top comments are fetched** from each post
+5. **GPT generates a response** using all that context, speaking as a typical member of the subreddit
+
+This is a full **RAG pipeline** — the chatbot's knowledge is always live and up-to-date with current subreddit discussions.
 
 ---
 
-## Feature 2: It's Got Humour too
+## Features
 
-<img width="700" alt="Screenshot 2022-08-19 175736" src="https://user-images.githubusercontent.com/35755386/185584007-96193212-fe92-4b96-8aeb-1f2868b57e91.png">
+- **Any Subreddit**: Type in any subreddit name — not limited to a predefined list
+- **Live Data**: Every response pulls fresh data from Reddit in real-time
+- **Subreddit Personality**: The bot adopts the tone, opinions, and humor of the community
+- **Multi-turn Conversation**: Chat history is maintained for contextual follow-ups
+- **Your API Key**: Bring your own OpenAI key — it's never stored on our servers
+- **3D Character**: Interactive Three.js character on the landing page
 
 ---
 
@@ -24,22 +35,60 @@ The bot primarily learns from Reddit's posts and comments. This large dataset co
 
 ### Server
 
-- Flask
-- SQLAlchemy
-- TensorFlow
-- TFLearn
-- Natural Language Toolkit (NLTK)
-- KeyBERT
-- Python Reddit API Wrapper (PRAW)
-
----
+- Flask + Flask-SocketIO
+- OpenAI Python SDK
+- Requests (Reddit web scraping)
 
 ### Client
 
 - React
-- ThreeJS
-- Redux
+- Three.js / React Three Fiber
+- Redux Toolkit
 - Chakra UI
-- Axios
-- SocketIO
-- Docker
+- Socket.IO Client
+- Tailwind CSS
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10+
+- Node.js 16+
+- An OpenAI API key (get one at [platform.openai.com](https://platform.openai.com))
+
+### Setup
+
+```bash
+# Install backend dependencies
+pip install -r requirements.txt
+
+# Install frontend dependencies
+cd client && npm install
+
+# Run the development server
+cd .. && python run.py
+```
+
+In a separate terminal:
+```bash
+cd client && npm start
+```
+
+The app will be available at `http://localhost:3000` (frontend) proxying to `http://localhost:5000` (backend).
+
+---
+
+## Architecture
+
+```
+User Message
+  → OpenAI: Extract Keywords
+  → Reddit Web Scraper: Search subreddit for top 20 posts
+  → Fetch top comments per post
+  → OpenAI GPT: Generate response with subreddit context
+  → Stream response back via SocketIO
+```
+
+No Reddit API credentials required — uses Reddit's public JSON endpoints.
