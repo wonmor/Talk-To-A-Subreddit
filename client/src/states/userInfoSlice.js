@@ -3,53 +3,46 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userInfoSlice = createSlice({
     name: 'userInfo',
     initialState: {
-        username: "Steve",
-        email: "stevemakinson@gmail.com",
-        goodToGo: false,
-        isSocketChannelOpen: false,
-        chatHistory: "",
-        buildHistory: "",
-        selectedSubRedditName: ""
+        username: "",
+        openaiApiKey: "",
+        subredditName: "",
+        chatHistory: [],
+        isConnected: false,
     },
     reducers: {
         setUsername: (state, action) => {
-            if (state.username !== action.payload) {
-                return {...state, username: action.payload };
-            }
+            state.username = action.payload;
         },
-        setEmail: (state, action) => {
-            if (state.email !== action.payload) {
-                return {...state, email: action.payload };
-            }
+        setOpenaiApiKey: (state, action) => {
+            state.openaiApiKey = action.payload;
         },
-        setGoodToGo: (state, action) => {
-            if (state.goodToGo !== action.payload) {
-                return {...state, goodToGo: action.payload };
-            }
-        },
-        setIsSocketChannelOpen: (state, action) => {
-            if (state.isSocketChannelOpen !== action.payload) {
-                return {...state, isSocketChannelOpen: action.payload };
-            }
+        setSubredditName: (state, action) => {
+            state.subredditName = action.payload;
         },
         setChatHistory: (state, action) => {
-            if (state.setChatHistory !== action.payload) {
-                return {...state, chatHistory: action.payload };
-            }
+            state.chatHistory = action.payload;
         },
-        setBuildHistory: (state, action) => {
-            if (state.setBuildHistory !== action.payload) {
-                return {...state, buildHistory: action.payload };
-            }
+        addChatMessage: (state, action) => {
+            state.chatHistory.push(action.payload);
         },
-        setSelectedSubRedditName: (state, action) => {
-            if (state.setSelectedSubRedditName !== action.payload) {
-                return {...state, selectedSubRedditName: action.payload };
-            }
-        }
+        setIsConnected: (state, action) => {
+            state.isConnected = action.payload;
+        },
+        resetChat: (state) => {
+            state.chatHistory = [];
+            state.isConnected = false;
+        },
     }
 })
 
-export const { setUsername, setEmail, setGoodToGo, setIsSocketChannelOpen, setChatHistory, setBuildHistory, setSelectedSubRedditName } = userInfoSlice.actions;
+export const {
+    setUsername,
+    setOpenaiApiKey,
+    setSubredditName,
+    setChatHistory,
+    addChatMessage,
+    setIsConnected,
+    resetChat,
+} = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;
