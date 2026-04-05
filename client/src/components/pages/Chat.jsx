@@ -1,17 +1,15 @@
-import { useEffect, useState } from 'react';
-import { MdSend } from "react-icons/md";
-
-import { FormErrorMessage } from '@chakra-ui/react';
+import { useEffect, useState, useRef } from 'react';
+import { MdSend, MdArrowBack } from "react-icons/md";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { Box, Stack, Text, Input, Button, FormControl } from '@chakra-ui/react';
+import { Box, Stack, Text, Input, Button, FormControl, Spinner } from '@chakra-ui/react';
 
 import { Showcase, socket } from './Home';
 
 import { Mount } from "../utilities/Transitions";
 
-import { setChatHistory } from '../../states/userInfoSlice';
+import { addChatMessage, resetChat } from '../../states/userInfoSlice';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -23,96 +21,143 @@ export default function Chat() {
 
     const username = useSelector((state) => state.userInfo.username);
     const chatHistory = useSelector((state) => state.userInfo.chatHistory);
-    const selectedSubRedditName = useSelector((state) => state.userInfo.selectedSubRedditName);
+    const subredditName = useSelector((state) => state.userInfo.subredditName);
+    const openaiApiKey = useSelector((state) => state.userInfo.openaiApiKey);
 
-    const [state, setState] = useState({ message: '', name: username });
-
+    const [message, setMessage] = useState('');
+    const [isThinking, setIsThinking] = useState(false);
+    const [statusText, setStatusText] = useState('');
     const [show, set] = useState(false);
-    const [isError, setIsError] = useState(false);
+
+    const chatEndRef = useRef(null);
 
     useEffect(() => {
         set(true);
-    }, []);
+
+        if (!socket || !subredditName || !openaiApiKey) {
+            navigate('/');
+            return;
+        }
+
+        const handleReply = ({ name, message: replyMsg, keywords }) => {
+            setIsThinking(false);
+            setStatusText('');
+            dispatch(addChatMessage({ name, message: replyMsg, keywords }));
+        };
+
+        const handleStatus = ({ status, message: statusMsg }) => {
+            setStatusText(statusMsg || 'Thinking...');
+        };
+
+        socket.on('reply', handleReply);
+        socket.on('status', handleStatus);
+
+        return () => {
+            socket.off('reply', handleReply);
+            socket.off('status', handleStatus);
+        };
+    }, [dispatch, navigate, subredditName, openaiApiKey]);
 
     useEffect(() => {
-        try {
-            socket.on('reply', ({ name, message }) => {
-                dispatch(setChatHistory([...chatHistory, { name, message }]));
-            });
-        } catch (e) {
-            navigate('/');
-            window.location.reload();
-        }
-    }, [chatHistory, dispatch, navigate]);
-
-    const onTextChange = e => {
-        setState({ message: e.target.value, name: username });
-    };
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, [chatHistory, isThinking]);
 
     const onMessageSubmit = (e) => {
         e.preventDefault();
 
-        const { name, message } = state;
-        const isInputEmpty = message === '';
+        if (!message.trim() || isThinking) return;
 
-        setIsError(isInputEmpty);
+        const userMsg = message.trim();
+        setMessage('');
+        setIsThinking(true);
 
-        if (!isInputEmpty) {
-            socket.emit('message', { name, message });
+        dispatch(addChatMessage({ name: username, message: userMsg }));
 
-            setState({ message: '', name });
-            dispatch(setChatHistory([...chatHistory, { name, message }]));
-        }
+        socket.emit('message', {
+            name: username,
+            message: userMsg,
+            subreddit: subredditName,
+            openaiKey: openaiApiKey,
+        });
     };
 
-    const ChatList = () => {
-        if (chatHistory) {
-            return (
-                // Slice creates a duplicate array...
-                <Box style={{ marginTop: "15px" }}>
-                    {chatHistory.slice().reverse().map(({ name, message }, index) => (
-                        <span key={index}>
-                            <h3><b>{name}</b>: <span className={message.includes('Thinking') && 'italic'} style={{ color: message.includes("Thinking") && "#bdefff" }}>{message}</span></h3>
-                        </span>
-                    ))}
-                </Box>
-            );
-        }
+    const handleBack = () => {
+        dispatch(resetChat());
+        if (socket) socket.disconnect();
+        navigate('/');
     };
 
     return (
         <>
-            <MetaTag title={"Talk to a Subreddit: An AI Chatbot"}
-                description={"Talk to a Subreddit is an AI chatbot that lets you talk to any subreddits on Reddit with its own unique personality."}
-                keywords={"ai chatbot, google ai chatbot sentient, ai chatbot free, best ai chatbot, ai chatbot online, ai chatbot for fun, reddit ai chatbot, conversational ai chatbot, ai chatbot friend"}
+            <MetaTag title={`Chatting with r/${subredditName}`}
+                description={`Talk to r/${subredditName} as if it were a person.`}
+                keywords={"ai chatbot, reddit chatbot, talk to subreddit"}
                 imgsrc={"talkreddit_character.png"}
                 url={"https://talkreddit.apps.johnseong.info"} />
 
             <Box className="border-t-2 border-white md:border-transparent">
-                {selectedSubRedditName &&
-                    <Mount content={
-                        <Text className="text-4xl mb-5 mt-5 md:mt-0">
-                            Howdy, <b>{username}</b>. I'm r/<b className='text-orange-400'>{selectedSubRedditName}</b>.
+                <Mount content={
+                    <Box className="flex items-center gap-4 mb-5 mt-5 md:mt-0">
+                        <Button size="sm" variant="ghost" colorScheme="orange" onClick={handleBack} leftIcon={<MdArrowBack />}>
+                            Back
+                        </Button>
+                        <Text className="text-4xl">
+                            Howdy, <b>{username}</b>. I'm r/<b className='text-orange-400'>{subredditName}</b>.
                         </Text>
-                    } show={show} />
-                }
+                    </Box>
+                } show={show} />
 
                 <form onSubmit={onMessageSubmit}>
-                    <FormControl isRequired isInvalid={isError}>
+                    <FormControl>
                         <Stack direction={['column', 'row']} spacing={2}>
-                            <Input placeholder='Start chatting with me...' value={state['message']} onChange={e => onTextChange(e)} marginRight={"10px"} width={"80%"} className="generic-text" />
-
-                            <Button onClick={onMessageSubmit} width={"min-content"} leftIcon={<MdSend />} colorScheme='orange' variant='solid'>
+                            <Input
+                                placeholder={`Ask r/${subredditName} anything...`}
+                                value={message}
+                                onChange={e => setMessage(e.target.value)}
+                                marginRight={"10px"}
+                                width={"80%"}
+                                className="generic-text"
+                                disabled={isThinking}
+                            />
+                            <Button
+                                onClick={onMessageSubmit}
+                                width={"min-content"}
+                                leftIcon={<MdSend />}
+                                colorScheme='orange'
+                                variant='solid'
+                                isLoading={isThinking}
+                                loadingText="Thinking"
+                            >
                                 <span className="font-bold">Send</span>
                             </Button>
                         </Stack>
-
-                        {isError && (
-                            <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
-                        )}
-                        <ChatList />
                     </FormControl>
                 </form>
+
+                {/* Status indicator */}
+                {isThinking && statusText && (
+                    <Box className="flex items-center gap-2 mt-3" style={{ color: "#bdefff" }}>
+                        <Spinner size="sm" />
+                        <Text className="text-sm italic">{statusText}</Text>
+                    </Box>
+                )}
+
+                {/* Chat messages */}
+                <Box style={{ marginTop: "15px" }}>
+                    {chatHistory.map(({ name, message: msg, keywords }, index) => (
+                        <Box key={index} className="mb-3">
+                            <Text>
+                                <b style={{ color: name === username ? "#ffbdf4" : "#bdefff" }}>{name}</b>: {msg}
+                            </Text>
+                            {keywords && (
+                                <Text className="text-xs italic mt-1" style={{ color: "#666" }}>
+                                    searched: {keywords}
+                                </Text>
+                            )}
+                        </Box>
+                    ))}
+                    <div ref={chatEndRef} />
+                </Box>
 
                 <Showcase />
             </Box>

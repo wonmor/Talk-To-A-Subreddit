@@ -1,6 +1,6 @@
-import { Box, Stack, Input, Text, Button, FormControl, FormErrorMessage } from '@chakra-ui/react';
+import { Box, Stack, Input, Text, Button, FormControl, FormErrorMessage, FormLabel } from '@chakra-ui/react';
 
-import { MdDoneOutline } from "react-icons/md";
+import { MdDoneOutline, MdChat } from "react-icons/md";
 
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSelector, useDispatch } from "react-redux";
@@ -8,8 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 import { Canvas, useFrame, extend } from "@react-three/fiber";
 import { useGLTF } from '@react-three/drei'
-
-import axios from 'axios';
 
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
@@ -24,10 +22,10 @@ import { io } from 'socket.io-client';
 
 import {
     setUsername,
-    setGoodToGo,
-    setBuildHistory,
-    setSelectedSubRedditName,
-    setChatHistory
+    setOpenaiApiKey,
+    setSubredditName,
+    setChatHistory,
+    setIsConnected,
 } from "../../states/userInfoSlice";
 
 export let socket;
@@ -50,19 +48,7 @@ const BackDrop = () => {
 }
 
 function Character(props) {
-    /*
-    This is a component function in JSX that contains the HTML markup that represent each graphical element on the webpage
-    Parameters
-    ----------
-    props: React element
-      Represents all the other properties that have to be rendered prior to this operation
-    Returns
-    -------
-    DOM File
-        A HTML markup that contains graphical elements
-    */
     const group = useRef();
-
     const { scene } = useGLTF('character.glb');
 
     useFrame((state, delta) => {
@@ -78,9 +64,7 @@ function Character(props) {
 
 function LoadingText(props) {
     const group = useRef();
-
     const font = new FontLoader().parse(quicksand);
-
     extend({ TextGeometry });
 
     useEffect(() => {
@@ -122,151 +106,209 @@ export default function Home() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [input, setInput] = useState('');
-
-    const [show, set] = useState(false);
+    const [step, setStep] = useState(1); // 1: name, 2: api key + subreddit
+    const [nameInput, setNameInput] = useState('');
+    const [apiKeyInput, setApiKeyInput] = useState('');
+    const [subredditInput, setSubredditInput] = useState('');
     const [isError, setIsError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
+    const [show, set] = useState(false);
 
     const username = useSelector((state) => state.userInfo.username);
-    const goodToGo = useSelector((state) => state.userInfo.goodToGo);
-    const buildHistory = useSelector((state) => state.userInfo.buildHistory);
 
-    const handleInputChange = (e) => setInput(e.target.value);
-
-    const subRedditList = ['AskReddit', 'Aspergers'];
-
-    const statusMessage = (goodToGo) => {
-        if (goodToGo) {
-            return (
-                <div className="flex flex-col">
-                    <span className="mt-5 md:mt-0 mb-5 text-3xl" style={{ color: "#bdefff" }}>
-                        Welcome Back, <b>{username}</b>.
-                    </span>
-
-                    <span className="mb-5 text-5xl mt-5 md:mt-0">
-                        Choose a <b style={{ color: "#ffbdf4" }}>Subreddit Bot</b>.
-                    </span>
-                </div>
-            );
-        } else {
-            return (<span>Sorry, An <b>Error</b> Occured!</span>);
-        }
-    };
-
-    const openSocketChannel = async (debugMode = false) => {
-        setIsLoading(true);
-
-        await axios.post('/api/connect')
-            .then(function () {
-                setIsLoading(false);
-
-                socket = io(process.env.NODE_EnV === "development" ? "localhost:5000/" : "https://talkreddit.apps.johnseong.info", {
-                    transports: ["websocket"],
-                    cors: {
-                        origin: process.env.NODE_EnV === "development" ? "http://localhost:3000/" : "https://talkreddit.apps.johnseong.info",
-                    },
-                });
-
-                dispatch(setChatHistory(''));
-                navigate('/chat');
-            })
-            .catch(function () {
-                dispatch(setGoodToGo(false));
-            });
-    };
-
-    const selectSubReddit = async (tempSubRedditName) => {
-        await axios.post('/api/set', { "subRedditName": tempSubRedditName })
-            .then(function () {
-                openSocketChannel();
-            })
-    };
-
-    const inputSubmitAction = (e) => {
-        e.preventDefault();
-
-        const isInputEmpty = input === '';
-
-        setIsError(isInputEmpty);
-
-        if (!isInputEmpty) {
-            dispatch(setUsername(input));
-            dispatch(setGoodToGo(true));
-        }
-    };
+    const popularSubreddits = ['AskReddit', 'technology', 'science', 'gaming', 'movies', 'music', 'worldnews', 'philosophy'];
 
     useEffect(() => {
         set(true);
     }, []);
 
-    useEffect(() => {
-        if (socket) {
-            socket.on('build', (data) => {
-                const type = data[0];
-                const message = data[1];
-
-                dispatch(setBuildHistory([...setBuildHistory, { type, message }]));
-            });
+    const handleNameSubmit = (e) => {
+        e.preventDefault();
+        if (!nameInput.trim()) {
+            setIsError(true);
+            setErrorMsg('Please enter your name.');
+            return;
         }
-    }, [buildHistory, dispatch])
+        setIsError(false);
+        dispatch(setUsername(nameInput.trim()));
+        setStep(2);
+    };
+
+    const handleConnect = (e) => {
+        e?.preventDefault();
+
+        const subreddit = subredditInput.trim().replace(/^r\//, '');
+
+        if (!apiKeyInput.trim()) {
+            setIsError(true);
+            setErrorMsg('Please enter your OpenAI API key.');
+            return;
+        }
+        if (!subreddit) {
+            setIsError(true);
+            setErrorMsg('Please enter a subreddit name.');
+            return;
+        }
+
+        setIsError(false);
+        dispatch(setOpenaiApiKey(apiKeyInput.trim()));
+        dispatch(setSubredditName(subreddit));
+        dispatch(setChatHistory([]));
+
+        // Create socket connection
+        socket = io(process.env.NODE_ENV === "development" ? "localhost:5000/" : "/", {
+            transports: ["websocket"],
+            cors: {
+                origin: process.env.NODE_ENV === "development" ? "http://localhost:3000/" : window.location.origin,
+            },
+        });
+
+        socket.on('connect', () => {
+            dispatch(setIsConnected(true));
+            navigate('/chat');
+        });
+
+        socket.on('connect_error', () => {
+            setIsError(true);
+            setErrorMsg('Failed to connect to the server. Please try again.');
+        });
+    };
+
+    const selectQuickSubreddit = (name) => {
+        setSubredditInput(name);
+    };
 
     return (
         <>
             <MetaTag title={"Talk to a Subreddit: An AI Chatbot"}
                 description={"Talk to a Subreddit is an AI chatbot that lets you talk to any subreddits on Reddit with its own unique personality."}
-                keywords={"ai chatbot, google ai chatbot sentient, ai chatbot free, best ai chatbot, ai chatbot online, ai chatbot for fun, reddit ai chatbot, conversational ai chatbot, ai chatbot friend"}
+                keywords={"ai chatbot, reddit chatbot, talk to subreddit, ai chatbot free, reddit ai, conversational ai chatbot"}
                 imgsrc={"talkreddit_character.png"}
                 url={"https://talkreddit.apps.johnseong.info"} />
 
             <Box className="flex flex-col border-t-2 border-white md:border-transparent">
                 <Mount content={
                     <>
-                        <Text className="mt-5 md:mt-0 mb-2 text-3xl md:text-5xl">
-                            {!goodToGo ? <span>I am so <b style={{ color: "#bdefff" }}>proud</b> of you for making all the way here.</span> : <Mount content={statusMessage(goodToGo)} show={goodToGo} />}
-                        </Text>
-
-                        {!goodToGo &&
-                            <Text className="mb-5 text-3xl md:text-5xl mt-5 md:mt-0">
-                                If you don't mind me asking, <b style={{ color: "#ffbdf4" }}>what should I call you?</b>
-                            </Text>
-                        }
+                        {step === 1 ? (
+                            <>
+                                <Text className="mt-5 md:mt-0 mb-2 text-3xl md:text-5xl">
+                                    <span>Talk to any <b style={{ color: "#bdefff" }}>Subreddit</b> as if it were a person.</span>
+                                </Text>
+                                <Text className="mb-5 text-3xl md:text-5xl mt-5 md:mt-0">
+                                    First, <b style={{ color: "#ffbdf4" }}>what should I call you?</b>
+                                </Text>
+                            </>
+                        ) : (
+                            <>
+                                <Text className="mt-5 md:mt-0 mb-2 text-3xl" style={{ color: "#bdefff" }}>
+                                    Welcome, <b>{username}</b>.
+                                </Text>
+                                <Text className="mb-5 text-5xl mt-5 md:mt-0">
+                                    Set up your <b style={{ color: "#ffbdf4" }}>connection</b>.
+                                </Text>
+                            </>
+                        )}
                     </>
                 } show={show} />
 
                 <Text className="mb-5 text-lg md:text-2xl mt-2 md:mt-0">
-                    I am powered by <b>deep learning</b>, so my conversation skills will improve from time to time as we get to know each other a bit more.
+                    Powered by <b>OpenAI GPT</b> with live Reddit data. The chatbot adopts the personality of your chosen subreddit.
                 </Text>
 
-                {!goodToGo ?
-                    <>
-                        <form onSubmit={inputSubmitAction}>
-                            <FormControl isRequired isInvalid={isError}>
-                                <Stack direction={['column', 'row']} spacing={2}>
-                                    <Input placeholder='Enter your response...' onChange={handleInputChange} marginRight={"10px"} width={"75%"} className="generic-text" />
+                {step === 1 ? (
+                    <form onSubmit={handleNameSubmit}>
+                        <FormControl isRequired isInvalid={isError}>
+                            <Stack direction={['column', 'row']} spacing={2}>
+                                <Input
+                                    placeholder='Enter your name...'
+                                    onChange={(e) => setNameInput(e.target.value)}
+                                    marginRight={"10px"}
+                                    width={"75%"}
+                                    className="generic-text"
+                                />
+                                <Button
+                                    className="drop-shadow-xl"
+                                    width={"min-content"}
+                                    leftIcon={<MdDoneOutline />}
+                                    colorScheme='orange'
+                                    variant='solid'
+                                    type="submit"
+                                >
+                                    <span className="font-bold">Continue</span>
+                                </Button>
+                            </Stack>
+                            {isError && (
+                                <FormErrorMessage className="generic-text">{errorMsg}</FormErrorMessage>
+                            )}
+                        </FormControl>
+                    </form>
+                ) : (
+                    <form onSubmit={handleConnect}>
+                        <FormControl isInvalid={isError}>
+                            <Stack spacing={4}>
+                                <Box>
+                                    <FormLabel className="generic-text" style={{ color: "#bdefff" }}>OpenAI API Key</FormLabel>
+                                    <Input
+                                        type="password"
+                                        placeholder='sk-...'
+                                        value={apiKeyInput}
+                                        onChange={(e) => setApiKeyInput(e.target.value)}
+                                        width={"75%"}
+                                        className="generic-text"
+                                    />
+                                    <Text className="text-sm mt-1" style={{ color: "#999" }}>
+                                        Your key is never stored on our servers. It's sent directly to OpenAI per request.
+                                    </Text>
+                                </Box>
 
-                                    <Button className="drop-shadow-xl" width={"min-content"} leftIcon={<MdDoneOutline />} colorScheme='orange' variant='solid' onClick={inputSubmitAction}>
-                                        <span className="font-bold">Submit</span>
-                                    </Button>
-                                </Stack>
+                                <Box>
+                                    <FormLabel className="generic-text" style={{ color: "#bdefff" }}>Subreddit</FormLabel>
+                                    <Stack direction={['column', 'row']} spacing={2}>
+                                        <Input
+                                            placeholder='e.g. AskReddit, philosophy, gaming...'
+                                            value={subredditInput}
+                                            onChange={(e) => setSubredditInput(e.target.value)}
+                                            width={"75%"}
+                                            className="generic-text"
+                                        />
+                                    </Stack>
+
+                                    <Stack direction='row' spacing={2} mt={3} flexWrap="wrap">
+                                        {popularSubreddits.map((name) => (
+                                            <Button
+                                                key={name}
+                                                size="sm"
+                                                variant={subredditInput === name ? 'solid' : 'outline'}
+                                                colorScheme='orange'
+                                                onClick={() => selectQuickSubreddit(name)}
+                                            >
+                                                r/{name}
+                                            </Button>
+                                        ))}
+                                    </Stack>
+                                </Box>
 
                                 {isError && (
-                                    <FormErrorMessage className="generic-text">Invalid entry. Please try it again.</FormErrorMessage>
+                                    <Text className="generic-text" color="red.300">{errorMsg}</Text>
                                 )}
-                            </FormControl>
-                        </form>
-                    </>
-                    : !isLoading ? <Stack direction={['column', 'row']} spacing='12px'>{subRedditList.map((tempSubRedditName) => (<Button width='min-content' colorScheme='orange' variant='outline' onClick={() => {
-                        dispatch(setSelectedSubRedditName(tempSubRedditName));
-                        selectSubReddit(tempSubRedditName);
-                    }}>
-                        <span>r/<b>{tempSubRedditName}</b></span>
-                    </Button>))}</Stack> : <Box className="flex flex-col"><code className="text-xl font-bold" style={{ color: "#bdefff" }}>Setting up the Neural Network... It might take a little while.</code>
-                        {buildHistory && <>
-                            {buildHistory.map(({ type, message }) => (<code className={type === 'log' ? 'text-white' : type === 'error' && 'text-red-200'}>{message}</code>))}</>}</Box>}
+
+                                <Button
+                                    className="drop-shadow-xl"
+                                    width={"min-content"}
+                                    leftIcon={<MdChat />}
+                                    colorScheme='orange'
+                                    variant='solid'
+                                    type="submit"
+                                >
+                                    <span className="font-bold">Start Chatting</span>
+                                </Button>
+                            </Stack>
+                        </FormControl>
+                    </form>
+                )}
 
                 <Text className="text-xl mb-5 mt-5">
-                    View our Zero-tolerant <button onClick={() => { navigate('/about') }} className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</button>. We cannot access or sell any <b>encrypted</b> private information that you have provided us.
+                    View our Zero-tolerant <button onClick={() => { navigate('/about') }} className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</button>. Your API key is only used in-session and <b>never stored</b>.
                 </Text>
             </Box>
 
