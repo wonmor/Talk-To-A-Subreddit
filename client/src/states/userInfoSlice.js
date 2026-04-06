@@ -4,7 +4,6 @@ export const userInfoSlice = createSlice({
     name: 'userInfo',
     initialState: {
         username: "",
-        openaiApiKey: "",
         subredditName: "",
         chatHistory: [],
         isConnected: false,
@@ -12,9 +11,6 @@ export const userInfoSlice = createSlice({
     reducers: {
         setUsername: (state, action) => {
             state.username = action.payload;
-        },
-        setOpenaiApiKey: (state, action) => {
-            state.openaiApiKey = action.payload;
         },
         setSubredditName: (state, action) => {
             state.subredditName = action.payload;
@@ -37,7 +33,6 @@ export const userInfoSlice = createSlice({
 
 export const {
     setUsername,
-    setOpenaiApiKey,
     setSubredditName,
     setChatHistory,
     addChatMessage,

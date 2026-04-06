@@ -22,7 +22,6 @@ export default function Chat() {
     const username = useSelector((state) => state.userInfo.username);
     const chatHistory = useSelector((state) => state.userInfo.chatHistory);
     const subredditName = useSelector((state) => state.userInfo.subredditName);
-    const openaiApiKey = useSelector((state) => state.userInfo.openaiApiKey);
 
     const [message, setMessage] = useState('');
     const [isThinking, setIsThinking] = useState(false);
@@ -34,7 +33,7 @@ export default function Chat() {
     useEffect(() => {
         set(true);
 
-        if (!socket || !subredditName || !openaiApiKey) {
+        if (!socket || !subredditName) {
             navigate('/');
             return;
         }
@@ -56,7 +55,7 @@ export default function Chat() {
             socket.off('reply', handleReply);
             socket.off('status', handleStatus);
         };
-    }, [dispatch, navigate, subredditName, openaiApiKey]);
+    }, [dispatch, navigate, subredditName]);
 
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -77,7 +76,6 @@ export default function Chat() {
             name: username,
             message: userMsg,
             subreddit: subredditName,
-            openaiKey: openaiApiKey,
         });
     };
 
@@ -134,7 +132,6 @@ export default function Chat() {
                     </FormControl>
                 </form>
 
-                {/* Status indicator */}
                 {isThinking && statusText && (
                     <Box className="flex items-center gap-2 mt-3" style={{ color: "#bdefff" }}>
                         <Spinner size="sm" />
@@ -142,7 +139,6 @@ export default function Chat() {
                     </Box>
                 )}
 
-                {/* Chat messages */}
                 <Box style={{ marginTop: "15px" }}>
                     {chatHistory.map(({ name, message: msg, keywords }, index) => (
                         <Box key={index} className="mb-3">

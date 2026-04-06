@@ -22,7 +22,6 @@ import { io } from 'socket.io-client';
 
 import {
     setUsername,
-    setOpenaiApiKey,
     setSubredditName,
     setChatHistory,
     setIsConnected,
@@ -106,9 +105,8 @@ export default function Home() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [step, setStep] = useState(1); // 1: name, 2: api key + subreddit
+    const [step, setStep] = useState(1); // 1: name, 2: subreddit
     const [nameInput, setNameInput] = useState('');
-    const [apiKeyInput, setApiKeyInput] = useState('');
     const [subredditInput, setSubredditInput] = useState('');
     const [isError, setIsError] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
@@ -139,11 +137,6 @@ export default function Home() {
 
         const subreddit = subredditInput.trim().replace(/^r\//, '');
 
-        if (!apiKeyInput.trim()) {
-            setIsError(true);
-            setErrorMsg('Please enter your OpenAI API key.');
-            return;
-        }
         if (!subreddit) {
             setIsError(true);
             setErrorMsg('Please enter a subreddit name.');
@@ -151,11 +144,9 @@ export default function Home() {
         }
 
         setIsError(false);
-        dispatch(setOpenaiApiKey(apiKeyInput.trim()));
         dispatch(setSubredditName(subreddit));
         dispatch(setChatHistory([]));
 
-        // Create socket connection
         socket = io(process.env.NODE_ENV === "development" ? "localhost:5000/" : "/", {
             transports: ["websocket"],
             cors: {
@@ -172,10 +163,6 @@ export default function Home() {
             setIsError(true);
             setErrorMsg('Failed to connect to the server. Please try again.');
         });
-    };
-
-    const selectQuickSubreddit = (name) => {
-        setSubredditInput(name);
     };
 
     return (
@@ -204,7 +191,7 @@ export default function Home() {
                                     Welcome, <b>{username}</b>.
                                 </Text>
                                 <Text className="mb-5 text-5xl mt-5 md:mt-0">
-                                    Set up your <b style={{ color: "#ffbdf4" }}>connection</b>.
+                                    Choose a <b style={{ color: "#ffbdf4" }}>Subreddit</b>.
                                 </Text>
                             </>
                         )}
@@ -212,7 +199,7 @@ export default function Home() {
                 } show={show} />
 
                 <Text className="mb-5 text-lg md:text-2xl mt-2 md:mt-0">
-                    Powered by <b>OpenAI GPT</b> with live Reddit data. The chatbot adopts the personality of your chosen subreddit.
+                    Powered by <b>live Reddit data</b>. No API keys needed. The chatbot finds and speaks from real subreddit discussions.
                 </Text>
 
                 {step === 1 ? (
@@ -247,21 +234,6 @@ export default function Home() {
                         <FormControl isInvalid={isError}>
                             <Stack spacing={4}>
                                 <Box>
-                                    <FormLabel className="generic-text" style={{ color: "#bdefff" }}>OpenAI API Key</FormLabel>
-                                    <Input
-                                        type="password"
-                                        placeholder='sk-...'
-                                        value={apiKeyInput}
-                                        onChange={(e) => setApiKeyInput(e.target.value)}
-                                        width={"75%"}
-                                        className="generic-text"
-                                    />
-                                    <Text className="text-sm mt-1" style={{ color: "#999" }}>
-                                        Your key is never stored on our servers. It's sent directly to OpenAI per request.
-                                    </Text>
-                                </Box>
-
-                                <Box>
                                     <FormLabel className="generic-text" style={{ color: "#bdefff" }}>Subreddit</FormLabel>
                                     <Stack direction={['column', 'row']} spacing={2}>
                                         <Input
@@ -271,6 +243,16 @@ export default function Home() {
                                             width={"75%"}
                                             className="generic-text"
                                         />
+                                        <Button
+                                            className="drop-shadow-xl"
+                                            width={"min-content"}
+                                            leftIcon={<MdChat />}
+                                            colorScheme='orange'
+                                            variant='solid'
+                                            type="submit"
+                                        >
+                                            <span className="font-bold">Start Chatting</span>
+                                        </Button>
                                     </Stack>
 
                                     <Stack direction='row' spacing={2} mt={3} flexWrap="wrap">
@@ -280,7 +262,7 @@ export default function Home() {
                                                 size="sm"
                                                 variant={subredditInput === name ? 'solid' : 'outline'}
                                                 colorScheme='orange'
-                                                onClick={() => selectQuickSubreddit(name)}
+                                                onClick={() => setSubredditInput(name)}
                                             >
                                                 r/{name}
                                             </Button>
@@ -291,24 +273,13 @@ export default function Home() {
                                 {isError && (
                                     <Text className="generic-text" color="red.300">{errorMsg}</Text>
                                 )}
-
-                                <Button
-                                    className="drop-shadow-xl"
-                                    width={"min-content"}
-                                    leftIcon={<MdChat />}
-                                    colorScheme='orange'
-                                    variant='solid'
-                                    type="submit"
-                                >
-                                    <span className="font-bold">Start Chatting</span>
-                                </Button>
                             </Stack>
                         </FormControl>
                     </form>
                 )}
 
                 <Text className="text-xl mb-5 mt-5">
-                    View our Zero-tolerant <button onClick={() => { navigate('/about') }} className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</button>. Your API key is only used in-session and <b>never stored</b>.
+                    View our Zero-tolerant <button onClick={() => { navigate('/about') }} className="font-bold hover:underline" style={{ color: "#bdefff" }}>Privacy Policy</button>. No data is stored. Everything runs <b>on-device</b>.
                 </Text>
             </Box>
 
