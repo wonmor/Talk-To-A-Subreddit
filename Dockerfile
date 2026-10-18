@@ -9,7 +9,7 @@ RUN yarn install
 RUN yarn build
 
 # FOR BACK-END DEPLOYMENT... (FLASK)
-FROM python:3.10.4-slim
+FROM python:3.10-slim-bookworm
 WORKDIR /
 # Don't forget "--from"! It acts as a bridge that connects two seperate stages
 COPY --from=build-step app ./app
